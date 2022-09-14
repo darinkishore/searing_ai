@@ -1,0 +1,20 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block body %}
+<section class="section mt-7">
+  <div class="container">
+    <div class="pg-columns pg-columns-reversed pg-align-items-center">
+      <div class="pg-column">
+        <img class="img-fluid" src="{% static 'images/undraw/undraw_alert.svg' %}" alt="Uh-Oh">
+      </div>
+      <div class="pg-column">
+        <h1 class="pg-title">Shucks. We couldn't find that.</h1>
+        <h2 class="pg-subtitle">
+          If you think this page should exist, double-check that you are signed in as the
+          right person.
+        </h2>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock%}

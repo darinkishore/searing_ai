@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load static %}
+<a class="btn btn-primary btn-outline btn-block flex justify-center" href="{% provider_login_url 'google' %}">
+  <img class="socialicon mr-2" src="{% static 'images/socialauth/google-g.svg' %}" alt="{% translate 'Google Logo' %}">
+  {% translate "Continue with Google" %}
+</a>
