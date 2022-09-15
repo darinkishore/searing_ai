@@ -1,23 +1,41 @@
 {% extends "web/app/app_base.html" %}
 {% load i18n %}
 {% load static %}
+
+{% load static %}
+{% block page_head %}
+
+{% endblock %}
+
 {% block app %}
 
+    <section class="app-card">
+        <div class="pg-columns pg-columns-reversed pg-align-items-center">
+            <div class="pg-column">
 
+                <!-- alerts -->
+                <div x-data="{success:false, fail:false}">
+                <div x-show="success" id="alert-success" class="alert alert-success ">
+                    <p>{% translate "Your document has been uploaded!" %}</p></div>
+                <div x-show="fail" id="alert-error" class="alert alert-error">
+                    <p>{% translate "There was an error uploading your document. Please try again." %}</p></div>
+                </div>
 
-<section class="app-card">
-    <div class="pg-columns pg-columns-reversed pg-align-items-center">
-        <div class="pg-column">
-            <h1 class="pg-title">{% translate "Manage Learning Objectives:" %}</h1>
-            <h2 class="pg-subtitle">{% translate "aka: gimme your documents!" %}</h2>
+                <h1 class="pg-title">{% translate "Upload your documents!" %}</h1>
 
+                <div id="form-holder" hx-get="{% url 'data:upload' %}"
+                hx-select="#docform" hx-target="#form-holder" hx-trigger="load"
+                class = max-w-md>
+                </div>
+
+                </div>
+            </div>
+    </section>
+
+    <section class="app-card">
+        <div class="pg-content">
+            <!-- Table of Documents-->
+            <p class="pg-text-primary"> Here's where your documents are:</p>
         </div>
-    </div>
-</section>
-<section class="app-card">
-    <div class="pg-content">
-        <p>To add more to this page you can make new sections like this one.</p>
-        <p>Tip: the source of this page can be found at <code>templates/web/app_home.html</code></p>
-    </div>
-</section>
+    </section>
 {% endblock %}

@@ -1,21 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Sum, Count
-from django.http import HttpResponseRedirect, HttpResponse
+
 from django.shortcuts import render, get_object_or_404
-from django.templatetags.static import static
-from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_POST, require_http_methods
-from django.views.generic import TemplateView
-from drf_spectacular.utils import extend_schema_view, extend_schema
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from apps.api.helpers import get_user_from_request
-from apps.api.permissions import IsAuthenticatedOrHasUserAPIKey
-
-from .models import Document, Summary, Questions
+from .forms import DocumentForm
 
 
 # Create your views here.
@@ -27,6 +14,24 @@ from .models import Document, Summary, Questions
 
 @login_required
 def upload(request):
-    # if request.method == 'POST':
-    return NotImplementedError
+    if request.method == 'GET':
+        return render(request, 'data/document_form.html', {'form': DocumentForm()})
+
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        success = False
+        if form.is_valid():
+            doc = form.save(commit=False)
+            doc.title = request.POST['title']
+            doc.document = request.FILES['document']
+            doc.user = request.user
+            doc.save()
+            success = True
+            form = DocumentForm() # clear form
+        response = render(request, 'data/document_form.html', {'form': form})
+        if success:
+            response['HX-trigger'] = 'document-upload-success'
+        return response
+
+
 

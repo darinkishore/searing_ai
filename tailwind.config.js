@@ -1,27 +1,12 @@
-module.exports = {
+const defaultTheme = require('tailwindcss/defaultTheme')
 
-/*
-daisyui: {
-        themes: [
-            {
-                'mytheme': {
-                    "primary": "#6D27FA",
-                    "secondary": "#D926A9",
-                    "accent": "#1FB2A6",
-                    "neutral": "#191D24",
-                    "base-100": "#2A303C",
-                    "info": "#3ABFF8",
-                    "success": "#36D399",
-                    "warning": "#FBBD23",
-                    "error": "#F87272",
-            },
-        ],
-    },
- */
+module.exports = {
     content: [
         './assets/**/*.js',
+        './assets/*.js',
         './assets/**/*.vue',
         './templates/**/*.html',
+        './templates/**/**/*.html',
     ],
     safelist: [
         'alert-success',
@@ -31,6 +16,9 @@ daisyui: {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+            },
             aspectRatio: {
                 '3/2': '3 / 2',
             },

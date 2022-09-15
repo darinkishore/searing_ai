@@ -8,6 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!--Mobile friendly-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--Alpine and HTMX-->
+<!--May make everything slower. Unsure if want to keep.-->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://unpkg.com/htmx.org@1.8.0"></script>
+
 {% if project_meta %}
   {% with project_meta|get_title:page_title as title %}
   {% with project_meta|get_description:page_description as description %}
@@ -35,7 +40,7 @@
 {% include 'web/components/favicon.html' %}
     <link rel="stylesheet" href="{% static 'css/site-base.css' %}">
     <link rel="stylesheet" href="{% static 'css/site-tailwind.css' %}">
-    <script src="https://use.fontawesome.com/72135c02f1.js"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     {% if GOOGLE_ANALYTICS_ID %}
         {% include 'web/components/google_analytics.html' %}
     {% endif %}
@@ -44,7 +49,8 @@
     {% block page_head %}
     {% endblock %}
 </head>
-<body>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body_wrapper %}
 {% block top_nav %}
   {% include 'web/components/top_nav.html' %}

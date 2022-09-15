@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     'rest_framework_api_key',
     'celery_progress',
     'storages',
+    'widget_tweaks',
 ]
 
 PEGASUS_APPS = [
@@ -69,13 +70,14 @@ PROJECT_APPS = [
     'apps.users.apps.UserConfig',
     'apps.api.apps.APIConfig',
     'apps.web',
-    'apps.data.apps.DataConfig'
+    'apps.data'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,6 +86,7 @@ MIDDLEWARE = [
     'apps.web.locale_middleware.UserLocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'searing_ai.urls'
