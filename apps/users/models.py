@@ -10,6 +10,8 @@ class CustomUser(AbstractUser):
     """
     avatar = models.FileField(upload_to='profile-pictures/', blank=True)
     language = models.CharField(max_length=10, blank=True, null=True)
+    # email_confirmed = models.BooleanField(default=False)
+    # documents =
 
     def __str__(self):
         return f'{self.get_full_name()} <{self.email or self.username}>'

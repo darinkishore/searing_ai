@@ -10,3 +10,5 @@ django-anymail[mailgun]  # email services
 celery-progress
 celery
 celery[redis]
+django-storages
+boto3

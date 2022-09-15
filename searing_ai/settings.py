@@ -56,6 +56,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'rest_framework_api_key',
     'celery_progress',
+    'storages',
 ]
 
 PEGASUS_APPS = [
@@ -68,6 +69,7 @@ PROJECT_APPS = [
     'apps.users.apps.UserConfig',
     'apps.api.apps.APIConfig',
     'apps.web',
+    'apps.data.apps.DataConfig'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
@@ -100,8 +102,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.web.context_processors.project_meta',
-                 # this line can be removed if not using google analytics
-                'apps.web.context_processors.google_analytics_id',
+                # this line can be removed if not using google analytics
+                 'apps.web.context_processors.google_analytics_id',
             ],
         },
     },
