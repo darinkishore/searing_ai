@@ -222,9 +222,41 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'static_root'
-STATIC_URL = '/static/'
+# TODO: remove CORS headers on digitalocean after using CDN
+# TODO: implement compression
+# note: fetching static and media files will be slow for now
+# until implementing a CDN
 
+USE_SPACES = True
+
+if USE_SPACES:
+    # settings
+    AWS_ACCESS_KEY_ID = 'DO00P6FFHTC9EEUWY9RX'
+    AWS_SECRET_ACCESS_KEY = 'AsVH7QNhKAn3G4YeQKe/6qOraF/asGzic5Lny/a4q2o'
+    AWS_DEFAULT_ACL = 'public-read'
+    # static file storage bucket
+    AWS_STORAGE_BUCKET_NAME = 'mochidocs'
+    AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    # static settings
+    AWS_LOCATION = 'static'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
+    # public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'apps.data.storage_backends.PublicMediaStorage'
+
+
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = BASE_DIR / 'static_root'
+    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = '/media/'
+
+# should be modified to look in static_url
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
@@ -233,8 +265,10 @@ STATICFILES_DIRS = [
 # note: this may break some image references in sass files which is why it is not enabled by default
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+# TODO: ensure that any user cannot view all usernames by connecting to media server
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

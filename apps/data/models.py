@@ -4,18 +4,20 @@ from django.conf import settings
 
 # Create your models here.
 from apps.utils.models import BaseModel
-
+from ..users.models import CustomUser
 
 class Document(BaseModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='documents')
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE, related_name='documents')
     title = models.CharField(max_length=255, blank=True, null=True, default=None)
-    # file that holds  the actual document
+
+    # file that holds the actual document
     file = models.FileField(upload_to="documents/", null=True, default=None)
+
     # summary, questions are one-one field with document
 
     def __str__(self):
-        return f"{self.title} - {self.user}"
+        return f"{self.title} - {self.username}"
 
 
 class Summary(BaseModel):
