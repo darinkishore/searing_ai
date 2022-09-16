@@ -5,23 +5,22 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
+from .storage_backends import PrivateMediaStorage
 
 
-# validation
+# TODO: add validation for file size, type
 
 
 class Document(BaseModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, related_name='documents')
-    title = models.CharField(max_length=255, blank=True, null=True, default=None)
+    title = models.CharField(max_length=255, default=None)
 
     # file that holds the actual document
-    file = models.FileField(upload_to="documents/", null=True, default=None)
+    file = models.FileField(storage=PrivateMediaStorage,
+                            upload_to="documents/", default=None,)
 
     # summary, questions are one-one field with document
-
-    def __str__(self):
-        return f"{self.title} - {self.username}"
 
 
 class Summary(BaseModel):

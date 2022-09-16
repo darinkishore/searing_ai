@@ -251,7 +251,9 @@ if USE_SPACES:
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'apps.data.storage_backends.PublicMediaStorage'
-
+    # private media settings
+    PRIVATE_MEDIA_LOCATION = 'private'
+    PRIVATE_FILE_STORAGE = 'apps.data.storage_backends.PrivateMediaStorage'
 
 else:
     STATIC_URL = '/static/'

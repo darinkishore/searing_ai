@@ -2,16 +2,15 @@
 {% load widget_tweaks %}
 
 
+<form hx-post="{{ request.path }}" enctype="multipart/form-data" id="docform">
 
-<form id="docform">
     <div class="py-4">
-        {% render_field form.file class+="pb-4"%}
-
+        {% render_field form.file class+="pb-4" %}
         {% render_field form.title placeholder="Document Title" %}
-
     </div>
 
-        <button type="submit" class="pg-button pg-button-primary">
-            {% translate "Upload" %}</button>
+    <!-- On submit, this triggers the hx-post request. -->
+    <button type="submit" class="pg-button pg-button-secondary">
+        {% translate "Upload" %}</button>
 
 </form>

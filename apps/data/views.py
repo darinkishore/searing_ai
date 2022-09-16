@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 
 from .forms import DocumentForm
-
 
 # Create your views here.
 # views are functions that take in request and return http response
@@ -20,18 +20,18 @@ def upload(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         success = False
+        print(form.errors)
         if form.is_valid():
             doc = form.save(commit=False)
             doc.title = request.POST['title']
-            doc.document = request.FILES['document']
+            doc.document = request.FILES['file']
             doc.user = request.user
             doc.save()
             success = True
-            form = DocumentForm() # clear form
+            form = DocumentForm()  # clear form
         response = render(request, 'data/document_form.html', {'form': form})
         if success:
-            response['HX-trigger'] = 'document-upload-success'
+            messages.success(request, 'Document uploaded successfully')
+        else:
+            messages.error(request, 'Document upload failed')
         return response
-
-
-
