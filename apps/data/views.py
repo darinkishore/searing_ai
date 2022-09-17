@@ -48,7 +48,7 @@ def upload(request):
         else:
             messages.error(request, 'Document upload failed')
         # redirect to home view
-        return redirect('data:upload')
+        return redirect('data:home')
 
 @login_required
 def summary_view(request, pk):
