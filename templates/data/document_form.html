@@ -4,6 +4,20 @@
 
 <form hx-post="{{ request.path }}" enctype="multipart/form-data" id="docform">
 
+    {% if messages %}
+        {% for m in messages %}
+            {% if m.level == 25 %}
+                <div class="alert alert-success">
+                    {{ m }}
+                </div>
+            {% else %}
+                <div class="alert alert-error">
+                    {{ m }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <div class="py-4">
         {% render_field form.file class+="pb-4" %}
         {% render_field form.title placeholder="Document Title" %}

@@ -9,27 +9,23 @@
 
 {% block app %}
 
+<section class="app-card">
+    <div class="pg-columns pg-columns-reversed pg-align-items-center">
+        <div class="pg-column">
+            <h1 class="pg-title">{% translate "Upload your documents!" %}</h1>
+            <div id="form-holder" hx-get="{% url 'data:upload' %}"
+                 hx-select="#docform" hx-target="this" hx-trigger="load"
+            class = max-w-lg></div>
 
-    <section class="app-card">
-        <div class="pg-columns pg-columns-reversed pg-align-items-center">
-            <div class="pg-column">
-                <h1 class="pg-title">{% translate "Upload your documents!" %}</h1>
-
-
-                <div id="form-holder" hx-get="{% url 'data:upload' %}"
-                     hx-select="#docform" hx-target="#form-holder" hx-trigger="load"
-                class = max-w-md>
-
-                </div>
-
-                </div>
-            </div>
-    </section>
-
-    <section class="app-card">
-        <div class="pg-content">
-            <!-- Table of Documents-->
-            <p class="pg-text-primary"> Here's where your documents are:</p>
         </div>
-    </section>
+    </div>
+</section>
+
+<section class="app-card">
+    <!-- Table of Documents-->
+    <div id="table-holder" hx-get="{% url 'data:doc_table' %}"
+         hx-select="#doctable" hx-target="this" hx-trigger="load">
+    </div>
+</section>
+
 {% endblock %}

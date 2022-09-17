@@ -18,7 +18,14 @@ class Document(BaseModel):
 
     # file that holds the actual document
     file = models.FileField(storage=PrivateMediaStorage,
-                            upload_to="documents/", default=None,)
+                            upload_to="documents/", default=None)
+
+    # convert created_at from GMT to local time
+    def get_created_at(self):
+        return self.created_at.astimezone()
+
+    def __str__(self):
+        return f'{self.title}'
 
     # summary, questions are one-one field with document
 
@@ -26,15 +33,16 @@ class Document(BaseModel):
 class Summary(BaseModel):
     document = models.OneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
                                     null=True, default=None)
-    content = models.TextField(null=True, default=None)
+    content = models.TextField(default=None)
 
     @property
-    def summary(self):
+    def get_summary(self):
         return self.content
 
-    @summary.setter
-    def summary(self, value):
-        self.content = value
+    # set summary
+    def set_summary(self, summary):
+        self.content = summary
+        self.save()
 
     def __str__(self):
         return f"Summary of {self.document.title}"
@@ -44,10 +52,10 @@ class Questions(BaseModel):
     document = models.OneToOneField("Document", on_delete=models.CASCADE, related_name="questions",
                                     null=True, default=None)
     # delimited string, split by question mark
-    questions = models.TextField()
+    questions = models.TextField(default=None)
 
     def __str__(self):
-        return f"Question of {self.document.title}"
+        return f"Questions of {self.document.title}"
 
     @property
     def get_questions(self):

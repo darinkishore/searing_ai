@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# timezone
+USE_TZ = True
 
 # Application definition
 
@@ -70,10 +72,13 @@ PROJECT_APPS = [
     'apps.users.apps.UserConfig',
     'apps.api.apps.APIConfig',
     'apps.web',
-    'apps.data'
+    'apps.data',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
+LAST_APP = ['django_cleanup.apps.CleanupConfig']
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS + LAST_APP
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

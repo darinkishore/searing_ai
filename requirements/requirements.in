@@ -13,3 +13,4 @@ celery[redis]
 django-storages
 boto3
 django-widget-tweaks
+django-cleanup

@@ -64,6 +64,8 @@ django-allauth==0.51.0
     # via -r requirements/requirements.in
 django-anymail[mailgun]==8.6
     # via -r requirements/requirements.in
+django-cleanup==6.0.0
+    # via -r requirements/requirements.in
 django-storages==1.13.1
     # via -r requirements/requirements.in
 django-widget-tweaks==1.4.12
