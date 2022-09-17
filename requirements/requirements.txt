@@ -80,6 +80,8 @@ djangorestframework-api-key==2.2.0
     # via -r requirements/requirements.in
 drf-spectacular==0.24.0
     # via -r requirements/requirements.in
+hiredis==2.0.0
+    # via redis
 idna==3.3
     # via requests
 inflection==0.5.1
@@ -120,8 +122,10 @@ pytz==2022.2.1
     #   djangorestframework
 pyyaml==6.0
     # via drf-spectacular
-redis==4.3.4
-    # via celery
+redis[hiredis]==4.3.4
+    # via
+    #   -r requirements/requirements.in
+    #   celery
 requests==2.28.1
     # via
     #   django-allauth

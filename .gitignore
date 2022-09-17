@@ -12,6 +12,7 @@ openapitools.json
 media/
 docs/_build
 _dist/
+.env
 .env.dev
 .env.production
 .DS_Store
