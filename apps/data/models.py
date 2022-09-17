@@ -48,21 +48,14 @@ class Summary(BaseModel):
         return f"Summary of {self.document.title}"
 
 
-class Questions(BaseModel):
-    document = models.OneToOneField("Document", on_delete=models.CASCADE, related_name="questions",
+
+class Question(BaseModel):
+    document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
                                     null=True, default=None)
+
     # delimited string, split by question mark
-    questions = models.TextField(default=None)
+    question = models.TextField(default=None)
+    answer = models.TextField(default=None)
 
     def __str__(self):
-        return f"Questions of {self.document.title}"
-
-    @property
-    def get_questions(self):
-        return self.questions.split("?")
-
-    def num_questions(self):
-        return len(self.get_questions)
-
-    def get_question(self, index):
-        return self.get_questions[index]
+        return f"Question of {self.document.title}"

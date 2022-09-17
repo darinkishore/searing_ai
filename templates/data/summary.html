@@ -1,5 +1,17 @@
 {% extends 'web/app/app_base.html' %}
+{% block app %}
 
-<section class = "app-card">
+<!-- back button -->
+<a class="btn btn-primary py-4" href="{% url 'data:home' %}">
+Back
+</a>
 
+<section class = "app-card bg-gray-100">
+    <h1 class="pg-subtitle py-4"> Summary of {{ summary.document.title }}: </h1>
+<!-- Displays summary in long stretch of text-->
+    <div class="bg-white rounded-lg shadow p-4">
+        <p>{{ summary.get_summary }}</p>
+    </div>
 </section>
+
+{% endblock %}

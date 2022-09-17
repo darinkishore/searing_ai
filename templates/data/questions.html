@@ -1,6 +1,21 @@
 {% extends 'web/app/app_base.html' %}
 
-<section class = "app-card">
+
+
+{% block app %}
+<section class="app-card flex bg-gray-100">
     <!-- Unordered List of questions-->
-    {{ questions.get_questions }}
+    <ul>
+    <a class="btn btn-primary p-4" href="{% url 'data:home' %}">
+        Back</a>
+        {% for question in questions %}
+            <li class="py-4">
+                <div class="question bg-white rounded-lg shadow p-4">
+                    <h3 class="pg-subtitle"> {{question.question}} </h3>
+                    <p class="pg-text"> {{question.answer}} </p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 </section>
+{% endblock %}

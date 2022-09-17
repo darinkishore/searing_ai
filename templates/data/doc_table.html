@@ -48,16 +48,11 @@
                         <tbody class="divide-y divide-gray-200 bg-white">
 
                         <!-- Table rows -->
-                        {% for  doc in documents %}
+                        {% for doc in documents %}
                             <tr>
                                 <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full"
-                                                 src="https://images.unsplash.com/photo-1517436073-3b1b1f1e9d0c?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"
-                                                 alt="">
-                                        </div>
-                                        <div class="ml-4">
+                                        <div class="">
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ doc.title }}
                                             </div>
@@ -68,11 +63,13 @@
                                     {{ doc.get_created_at }}
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <a href="" class="text-indigo-600 hover:text-indigo-900">
+                                    <a href="{% url 'data:summary' doc.pk %}"
+                                    class="text-indigo-600 hover:text-indigo-900" >
                                         View Summary</a>
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <a href="" class="text-indigo-600 hover:text-indigo-900">
+                                    <a href="{% url 'data:questions' doc.pk %}"
+                                       class="text-indigo-600 hover:text-indigo-900">
                                         View Questions</a>
                                 </td>
                                 <td class="px-3 py-4 text-sm font-medium text-right whitespace-nowrap">
