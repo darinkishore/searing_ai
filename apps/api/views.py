@@ -1,26 +1,35 @@
 import os
-
-from django.contrib.auth.decorators import login_required
+import environ
+import boto3
+import re
+import requests
+from django.shortcuts import get_object_or_404
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import permission_classes, api_view, action
+from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, mixins, generics
-from rest_framework.reverse import reverse
 from rest_framework import viewsets
 
 from apps.users.models import CustomUser
 from apps.data.models import Document, Summary, Question
 from apps.api.serializers import DocumentSerializer, SummarySerializer, QuestionSerializer, UserSerializer
 
+# boto3 client init for textract
+env = environ.Env()
+environ.Env.read_env()
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = env('AWS_REGION')
 
+textract = boto3.client('textract', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                        region_name=AWS_REGION)
 
 # basic CRUD classes for users, documents, summaries, and questions
 
 IS_AUTHORIZED = [SessionAuthentication, BasicAuthentication]
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -50,17 +59,36 @@ class DocumentViewSet(viewsets.ModelViewSet):
         return Document.objects.filter(user=self.request.user)
 
     def get_object(self):
-        doc = Document.objects.get_object_or_404(self.get_queryset(), user=self.request.user, id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, doc)
-        return doc
+        return get_object_or_404(Document, pk=self.kwargs['pk'])
 
-    # this method should eventually POST a summary
     @action(detail=True, methods=['get'])
-    def process_document(self):
+    def start_doc_text_detection(self, request, *args, **kwargs):
         """
         Process a document via Amazon Textract to get its contents.
         """
-        tasks.process_document.delay(self.get_object())
+        doc = self.get_object()
+        name = 'private/' + doc.file.name
+        # make a boto3 s3 client to get the file from a user's private s3 bucket
+        s3 = boto3.resource('s3', aws_access_key_id=env('DO_ACCESS_KEY_ID'),
+                            aws_secret_access_key=env('DO_SECRET_ACCESS_KEY'),
+                            endpoint_url=env('DO_S3_ENDPOINT_URL'))
+
+        s3_object = s3.Object(bucket_name=env('DO_STORAGE_BUCKET_NAME'), key=name)
+
+        job_id = textract.start_document_text_detection(
+            DocumentLocation={
+                'S3Object': s3_object
+            })
+
+        return job_id
+
+    @action(detail=True, methods=['get'])
+    def get_doc_text(job_id):
+        """
+        Get the text from a document.
+        """
+        response = textract.get_document_text_detection(JobId=job_id)
+        return response
 
 
 class SummaryViewSet(viewsets.ModelViewSet):
@@ -72,14 +100,15 @@ class SummaryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = SummarySerializer
 
+    def create_summary(self, document):
+        """
+        Create a summary for a document.
+        """
+        pass
+
     def get_queryset(self):
         # Show only the summary for the document that the user owns
-        return Summary.objects.filter(document__user=self.request.user, document__id=self.kwargs['document_pk'])
-
-    def get_object(self):
-        summary = Summary.objects.get_object_or_404(self.get_queryset(), id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, summary)
-        return summary
+        return Summary.objects.filter(document__user=self.request.user)
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -92,9 +121,4 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Show only the questions for the document that the user owns
-        return Question.objects.filter(document__user=self.request.user, document__id=self.kwargs['document_pk'])
-
-    def get_object(self):
-        question = Question.objects.get_object_or_404(self.get_queryset())
-        self.check_object_permissions(self.request, question)
-        return question
+        return Question.objects.filter(document__user=self.request.user)

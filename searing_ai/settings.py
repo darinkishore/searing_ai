@@ -126,16 +126,6 @@ WSGI_APPLICATION = 'searing_ai.wsgi.application'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env('REDIS_URL'),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -254,22 +244,21 @@ USE_SPACES = True
 
 if USE_SPACES:
     # settings
-    AWS_ACCESS_KEY_ID = env('DO_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('DO_SECRET_ACCESS_KEY')
-    AWS_DEFAULT_ACL = 'public-read'
-    # static file storage bucket
-    AWS_STORAGE_BUCKET_NAME = 'mochidocs'
-    AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com'
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = 'moshistatic'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
     # static settings
-    AWS_LOCATION = 'static'
+
+    STATIC_LOCATION = 'static'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STATIC_LOCATION}/'
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'apps.data.storage_backends.PublicMediaStorage'
     # private media settings
     PRIVATE_MEDIA_LOCATION = 'private'

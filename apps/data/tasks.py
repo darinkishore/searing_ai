@@ -13,11 +13,7 @@ from apps.api.tasks import upload_document_task as udt
 
 
 @shared_task
-def upload_document_task(document, request):
-    """
-    Uploads given to Amazon S3 asynchronously by
-    sending a post request to the backend API app.
-    """
-    udt(request)
-
+def process_document_task(document_id):
+    document = Document.objects.get(pk=document_id)
+    # call api function to process document
 

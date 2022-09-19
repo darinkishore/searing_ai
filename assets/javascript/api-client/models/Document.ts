@@ -30,12 +30,6 @@ export interface Document {
      * @type {string}
      * @memberof Document
      */
-    title?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Document
-     */
     file?: string;
     /**
      * 
@@ -43,6 +37,12 @@ export interface Document {
      * @memberof Document
      */
     readonly createdAt: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof Document
+     */
+    title?: string;
     /**
      * 
      * @type {Date}
@@ -81,9 +81,9 @@ export function DocumentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     return {
         
         'id': json['id'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
         'file': !exists(json, 'file') ? undefined : json['file'],
         'createdAt': (new Date(json['created_at'])),
+        'title': !exists(json, 'title') ? undefined : json['title'],
         'updatedAt': (new Date(json['updated_at'])),
         'user': json['user'],
     };
@@ -98,8 +98,8 @@ export function DocumentToJSON(value?: Document | null): any {
     }
     return {
         
-        'title': value.title,
         'file': value.file,
+        'title': value.title,
     };
 }
 

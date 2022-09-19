@@ -11,7 +11,6 @@ models/PaginatedEmployeeList.ts
 models/PaginatedQuestionList.ts
 models/PaginatedSummaryList.ts
 models/PaginatedUserList.ts
-models/PatchedDocument.ts
 models/PatchedEmployee.ts
 models/PatchedQuestion.ts
 models/PatchedSummary.ts

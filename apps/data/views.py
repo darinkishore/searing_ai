@@ -12,7 +12,6 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from apps.api import views as api
 from .forms import DocumentForm
 from .models import Document, Summary, Question
-from .tasks import upload_document_task
 
 # Create your views here.
 # views are functions that take in request and return http response
@@ -25,7 +24,6 @@ from .tasks import upload_document_task
 @login_required
 def home(request):
     return render(request, 'web/app_home.html')
-
 
 # shows a table of documents with links to summary and questions
 @login_required
@@ -48,14 +46,16 @@ def upload(request):
             doc.title = request.POST['title']
             doc.document = request.FILES['file']
             doc.user = request.user
-            upload_document_task.delay(doc, request)
+            doc.save()
             success = True
-    if success:
-        messages.success(request, 'Document upload started!')
-    else:
-        messages.error(request, 'Document upload failed')
-    # redirect to home view
-    return redirect('data:home')
+            # start processing document
+            api.DocumentViewSet.get_object(doc).start_doc_text_detection()
+        if success:
+            messages.success(request, 'Document upload started!')
+        else:
+            messages.error(request, 'Document upload failed')
+        # redirect to home view
+        return redirect('data:home')
 
 @login_required
 def summary_view(request, pk):
@@ -63,18 +63,8 @@ def summary_view(request, pk):
     summary = Summary.objects.filter(document=document).first()
     return render(request, 'data/summary.html', {'summary': summary})
 
-# get the document and upload it to amazon's OCR service and process the data
-# and save it to the database
-@login_required
-def summary(request, pk):
-    document = get_object_or_404(Document, pk=pk)
-    # upload the document to
-
-
-# TODO: change to question
 @login_required
 def questions_view(request, pk):
     document = get_object_or_404(Document, pk=pk)
     questions = list(Question.objects.filter(document=document))
     return render(request, 'data/questions.html', {'questions': questions})
-

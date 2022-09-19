@@ -9,7 +9,6 @@ export * from './PaginatedEmployeeList';
 export * from './PaginatedQuestionList';
 export * from './PaginatedSummaryList';
 export * from './PaginatedUserList';
-export * from './PatchedDocument';
 export * from './PatchedEmployee';
 export * from './PatchedQuestion';
 export * from './PatchedSummary';

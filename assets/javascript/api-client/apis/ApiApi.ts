@@ -20,7 +20,6 @@ import type {
   PaginatedQuestionList,
   PaginatedSummaryList,
   PaginatedUserList,
-  PatchedDocument,
   PatchedQuestion,
   PatchedSummary,
   Question,
@@ -38,8 +37,6 @@ import {
     PaginatedSummaryListToJSON,
     PaginatedUserListFromJSON,
     PaginatedUserListToJSON,
-    PatchedDocumentFromJSON,
-    PatchedDocumentToJSON,
     PatchedQuestionFromJSON,
     PatchedQuestionToJSON,
     PatchedSummaryFromJSON,
@@ -53,10 +50,19 @@ import {
 } from '../models';
 
 export interface ApiDocumentsCreateRequest {
-    document?: Document;
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    user: string;
+    file?: string;
+    title?: string;
 }
 
 export interface ApiDocumentsDestroyRequest {
+    id: string;
+}
+
+export interface ApiDocumentsGetDocTextRetrieveRequest {
     id: string;
 }
 
@@ -66,11 +72,12 @@ export interface ApiDocumentsListRequest {
 
 export interface ApiDocumentsPartialUpdateRequest {
     id: string;
-    patchedDocument?: PatchedDocument;
-}
-
-export interface ApiDocumentsProcessDocumentRetrieveRequest {
-    id: string;
+    id2?: number;
+    file?: string;
+    createdAt?: Date;
+    title?: string;
+    updatedAt?: Date;
+    user?: string;
 }
 
 export interface ApiDocumentsQuestionsCreateRequest {
@@ -109,6 +116,10 @@ export interface ApiDocumentsRetrieveRequest {
     id: string;
 }
 
+export interface ApiDocumentsStartDocTextDetectionRetrieveRequest {
+    id: string;
+}
+
 export interface ApiDocumentsSummaryCreateRequest {
     documentId: string;
     summary?: Summary;
@@ -143,7 +154,12 @@ export interface ApiDocumentsSummaryUpdateRequest {
 
 export interface ApiDocumentsUpdateRequest {
     id: string;
-    document?: Document;
+    id2: number;
+    createdAt: Date;
+    updatedAt: Date;
+    user: string;
+    file?: string;
+    title?: string;
 }
 
 export interface ApiUsersListRequest {
@@ -163,11 +179,25 @@ export class ApiApi extends runtime.BaseAPI {
      * Allows you to list, create, retrieve, update, and destroy documents.
      */
     async apiDocumentsCreateRaw(requestParameters: ApiDocumentsCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsCreate.');
+        }
+
+        if (requestParameters.createdAt === null || requestParameters.createdAt === undefined) {
+            throw new runtime.RequiredError('createdAt','Required parameter requestParameters.createdAt was null or undefined when calling apiDocumentsCreate.');
+        }
+
+        if (requestParameters.updatedAt === null || requestParameters.updatedAt === undefined) {
+            throw new runtime.RequiredError('updatedAt','Required parameter requestParameters.updatedAt was null or undefined when calling apiDocumentsCreate.');
+        }
+
+        if (requestParameters.user === null || requestParameters.user === undefined) {
+            throw new runtime.RequiredError('user','Required parameter requestParameters.user was null or undefined when calling apiDocumentsCreate.');
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
@@ -176,12 +206,51 @@ export class ApiApi extends runtime.BaseAPI {
         if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.id !== undefined) {
+            formParams.append('id', requestParameters.id as any);
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        if (requestParameters.createdAt !== undefined) {
+            formParams.append('created_at', requestParameters.createdAt as any);
+        }
+
+        if (requestParameters.title !== undefined) {
+            formParams.append('title', requestParameters.title as any);
+        }
+
+        if (requestParameters.updatedAt !== undefined) {
+            formParams.append('updated_at', requestParameters.updatedAt as any);
+        }
+
+        if (requestParameters.user !== undefined) {
+            formParams.append('user', requestParameters.user as any);
+        }
+
         const response = await this.request({
             path: `/api/documents`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: DocumentToJSON(requestParameters.document),
+            body: formParams,
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
@@ -190,7 +259,7 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * Allows you to list, create, retrieve, update, and destroy documents.
      */
-    async apiDocumentsCreate(requestParameters: ApiDocumentsCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
+    async apiDocumentsCreate(requestParameters: ApiDocumentsCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
         const response = await this.apiDocumentsCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -229,6 +298,43 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDocumentsDestroy(requestParameters: ApiDocumentsDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiDocumentsDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Get the text from a document.
+     */
+    async apiDocumentsGetDocTextRetrieveRaw(requestParameters: ApiDocumentsGetDocTextRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsGetDocTextRetrieve.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/documents/{id}/get_doc_text`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
+    }
+
+    /**
+     * Get the text from a document.
+     */
+    async apiDocumentsGetDocTextRetrieve(requestParameters: ApiDocumentsGetDocTextRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
+        const response = await this.apiDocumentsGetDocTextRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -280,8 +386,6 @@ export class ApiApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
@@ -289,12 +393,51 @@ export class ApiApi extends runtime.BaseAPI {
         if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        if (requestParameters.createdAt !== undefined) {
+            formParams.append('created_at', requestParameters.createdAt as any);
+        }
+
+        if (requestParameters.title !== undefined) {
+            formParams.append('title', requestParameters.title as any);
+        }
+
+        if (requestParameters.updatedAt !== undefined) {
+            formParams.append('updated_at', requestParameters.updatedAt as any);
+        }
+
+        if (requestParameters.user !== undefined) {
+            formParams.append('user', requestParameters.user as any);
+        }
+
         const response = await this.request({
             path: `/api/documents/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedDocumentToJSON(requestParameters.patchedDocument),
+            body: formParams,
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
@@ -305,43 +448,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDocumentsPartialUpdate(requestParameters: ApiDocumentsPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
         const response = await this.apiDocumentsPartialUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Process a document via Amazon Textract to get its contents.
-     */
-    async apiDocumentsProcessDocumentRetrieveRaw(requestParameters: ApiDocumentsProcessDocumentRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsProcessDocumentRetrieve.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
-        }
-        const response = await this.request({
-            path: `/api/documents/{id}/process_document`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
-    }
-
-    /**
-     * Process a document via Amazon Textract to get its contents.
-     */
-    async apiDocumentsProcessDocumentRetrieve(requestParameters: ApiDocumentsProcessDocumentRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
-        const response = await this.apiDocumentsProcessDocumentRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -633,6 +739,43 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * Process a document via Amazon Textract to get its contents.
+     */
+    async apiDocumentsStartDocTextDetectionRetrieveRaw(requestParameters: ApiDocumentsStartDocTextDetectionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsStartDocTextDetectionRetrieve.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/documents/{id}/start_doc_text_detection`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
+    }
+
+    /**
+     * Process a document via Amazon Textract to get its contents.
+     */
+    async apiDocumentsStartDocTextDetectionRetrieve(requestParameters: ApiDocumentsStartDocTextDetectionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
+        const response = await this.apiDocumentsStartDocTextDetectionRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Allows you to list, create, retrieve, update, and destroy a document\'s one summary.
      */
     async apiDocumentsSummaryCreateRaw(requestParameters: ApiDocumentsSummaryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Summary>> {
@@ -890,11 +1033,25 @@ export class ApiApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsUpdate.');
         }
 
+        if (requestParameters.id2 === null || requestParameters.id2 === undefined) {
+            throw new runtime.RequiredError('id2','Required parameter requestParameters.id2 was null or undefined when calling apiDocumentsUpdate.');
+        }
+
+        if (requestParameters.createdAt === null || requestParameters.createdAt === undefined) {
+            throw new runtime.RequiredError('createdAt','Required parameter requestParameters.createdAt was null or undefined when calling apiDocumentsUpdate.');
+        }
+
+        if (requestParameters.updatedAt === null || requestParameters.updatedAt === undefined) {
+            throw new runtime.RequiredError('updatedAt','Required parameter requestParameters.updatedAt was null or undefined when calling apiDocumentsUpdate.');
+        }
+
+        if (requestParameters.user === null || requestParameters.user === undefined) {
+            throw new runtime.RequiredError('user','Required parameter requestParameters.user was null or undefined when calling apiDocumentsUpdate.');
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
@@ -903,12 +1060,51 @@ export class ApiApi extends runtime.BaseAPI {
         if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.id2 !== undefined) {
+            formParams.append('id', requestParameters.id2 as any);
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        if (requestParameters.createdAt !== undefined) {
+            formParams.append('created_at', requestParameters.createdAt as any);
+        }
+
+        if (requestParameters.title !== undefined) {
+            formParams.append('title', requestParameters.title as any);
+        }
+
+        if (requestParameters.updatedAt !== undefined) {
+            formParams.append('updated_at', requestParameters.updatedAt as any);
+        }
+
+        if (requestParameters.user !== undefined) {
+            formParams.append('user', requestParameters.user as any);
+        }
+
         const response = await this.request({
             path: `/api/documents/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: DocumentToJSON(requestParameters.document),
+            body: formParams,
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));

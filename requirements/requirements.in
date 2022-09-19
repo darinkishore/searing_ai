@@ -16,4 +16,5 @@ django-widget-tweaks
 django-cleanup
 django-environ
 redis[hiredis]
-django-queued-storage
+hypothesis[django]
+requests

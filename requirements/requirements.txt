@@ -11,7 +11,9 @@ asgiref==3.5.2
 async-timeout==4.0.2
     # via redis
 attrs==22.1.0
-    # via jsonschema
+    # via
+    #   hypothesis
+    #   jsonschema
 billiard==3.6.4.0
     # via celery
 boto3[crt]==1.24.73
@@ -21,9 +23,7 @@ botocore==1.27.73
     #   boto3
     #   s3transfer
 celery[redis]==5.2.7
-    # via
-    #   -r requirements/requirements.in
-    #   django-celery
+    # via -r requirements/requirements.in
 celery-progress==0.1.2
     # via -r requirements/requirements.in
 certifi==2022.9.14
@@ -58,24 +58,18 @@ django==4.1.1
     #   dj-stripe
     #   django-allauth
     #   django-anymail
-    #   django-appconf
     #   django-storages
     #   djangorestframework
     #   drf-spectacular
+    #   hypothesis
     #   jsonfield
 django-allauth==0.51.0
     # via -r requirements/requirements.in
 django-anymail[mailgun]==8.6
     # via -r requirements/requirements.in
-django-appconf==1.0.5
-    # via django-queued-storage
-django-celery==3.1.17
-    # via django-queued-storage
 django-cleanup==6.0.0
     # via -r requirements/requirements.in
 django-environ==0.9.0
-    # via -r requirements/requirements.in
-django-queued-storage==0.8.0
     # via -r requirements/requirements.in
 django-storages==1.13.1
     # via -r requirements/requirements.in
@@ -89,8 +83,12 @@ djangorestframework-api-key==2.2.0
     # via -r requirements/requirements.in
 drf-spectacular==0.24.0
     # via -r requirements/requirements.in
+exceptiongroup==1.0.0rc9
+    # via hypothesis
 hiredis==2.0.0
     # via redis
+hypothesis[django]==6.54.6
+    # via -r requirements/requirements.in
 idna==3.3
     # via requests
 inflection==0.5.1
@@ -148,8 +146,9 @@ s3transfer==0.6.0
 six==1.16.0
     # via
     #   click-repl
-    #   django-queued-storage
     #   python-dateutil
+sortedcontainers==2.4.0
+    # via hypothesis
 sqlparse==0.4.2
     # via django
 stripe==4.1.0
