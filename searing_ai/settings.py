@@ -126,6 +126,16 @@ WSGI_APPLICATION = 'searing_ai.wsgi.application'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env('REDIS_URL'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -244,8 +254,8 @@ USE_SPACES = True
 
 if USE_SPACES:
     # settings
-    AWS_ACCESS_KEY_ID = 'DO00P6FFHTC9EEUWY9RX'
-    AWS_SECRET_ACCESS_KEY = 'AsVH7QNhKAn3G4YeQKe/6qOraF/asGzic5Lny/a4q2o'
+    AWS_ACCESS_KEY_ID = env('DO_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('DO_SECRET_ACCESS_KEY')
     AWS_DEFAULT_ACL = 'public-read'
     # static file storage bucket
     AWS_STORAGE_BUCKET_NAME = 'mochidocs'
@@ -340,8 +350,8 @@ SPECTACULAR_SETTINGS = {
 
 
 # Celery setup (using redis)
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
+CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
 
 # Pegasus config
 

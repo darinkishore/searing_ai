@@ -3,12 +3,12 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+import json
+
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
 
-
-# TODO: add validation for file size, type
 
 
 class Document(BaseModel):
@@ -27,8 +27,27 @@ class Document(BaseModel):
     def __str__(self):
         return f'{self.title}'
 
-    # summary, questions are one-one field with document
+    def clean(self):
+        # check if the file is a pdf
+        if not self.file.name.endswith('.pdf'):
+            raise ValidationError(_('File must be a PDF'))
 
+        # check if the file is less than 5mb
+        if self.file.size > 5242880:
+            raise ValidationError(_('File must be less than 5mb'))
+
+        # check if the file is empty
+        if self.file.size == 0:
+            raise ValidationError(_('File cannot be empty'))
+
+        # check if the file is a duplicate
+        if Document.objects.filter(file=self.file).exists():
+            raise ValidationError(_('File already exists'))
+
+        # trim whitespace from title
+        self.title = self.title.strip()
+
+# summary, questions are one-one field with document
 
 class Summary(BaseModel):
     document = models.OneToOneField("Document", on_delete=models.CASCADE, related_name="summary",

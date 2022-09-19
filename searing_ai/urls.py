@@ -40,6 +40,8 @@ urlpatterns = [
     path('pegasus/', include('pegasus.apps.examples.urls')),
     path('pegasus/employees/', include('pegasus.apps.employees.urls')),
     path('celery-progress/', include('celery_progress.urls')),
+    path('api/', include('apps.api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
     # API docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI - you may wish to remove one of these depending on your preference

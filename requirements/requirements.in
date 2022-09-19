@@ -11,8 +11,9 @@ celery-progress
 celery
 celery[redis]
 django-storages
-boto3
+boto3[crt]
 django-widget-tweaks
 django-cleanup
 django-environ
 redis[hiredis]
+django-queued-storage
