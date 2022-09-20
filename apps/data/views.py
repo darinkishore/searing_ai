@@ -49,7 +49,6 @@ def upload(request):
             doc.save()
             success = True
             # start processing document
-            api.DocumentViewSet.get_object(doc).start_doc_text_detection()
         if success:
             messages.success(request, 'Document upload started!')
         else:

@@ -253,12 +253,11 @@ if USE_SPACES:
     }
     # static settings
 
-    STATIC_LOCATION = 'static'
+    STATIC_LOCATION = ''
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STATIC_LOCATION}/'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'apps.data.storage_backends.PublicMediaStorage'
     # private media settings
     PRIVATE_MEDIA_LOCATION = 'private'

@@ -14,7 +14,7 @@ class StaticStorage(S3Boto3Storage):
 
 class PublicMediaStorage(S3Boto3Storage):
     location = settings.PUBLIC_MEDIA_LOCATION
-    default_acl = 'public-read'
+
     bucket_name = 'moshimedia'
     custom_domain = f'{bucket_name}.s3.amazonaws.com'
 
@@ -23,6 +23,6 @@ class PrivateMediaStorage(S3Boto3Storage):
     location = settings.PRIVATE_MEDIA_LOCATION
     default_acl = 'private'
     file_overwrite = False
-    bucket_name = 'moshidocs'
+    bucket_name = 'moshimedia'
     custom_domain = f'{bucket_name}.s3.amazonaws.com'
 
