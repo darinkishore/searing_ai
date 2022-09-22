@@ -141,8 +141,7 @@ class Document(BaseModel):
         doc_text = doc_text.encode()
         with open(f'{self.title}_summary.txt', 'wb') as f:
             f.write(doc_text)
-        self.ocr_text = f'{self.title}_summary.txt'
-        self.save()
+        self.ocr_text.save(f'{self.title}_summary.txt', ContentFile(doc_text))
 
 
 # summary, questions are one-one field with document

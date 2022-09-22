@@ -15,7 +15,7 @@ def wait_for_text_extraction_task(document_id):
     document = Document.objects.get(id=document_id)
     response = document.get_text_extraction()
     if response != 'DONE':
-        time.sleep(15)
+        time.sleep(5)
         wait_for_text_extraction_task(document_id)
     else:
         extract_text_task(document_id)
