@@ -1,19 +1,33 @@
-from .models import Document
-from celery import shared_task
-
-from rest_framework import serializers
-from rest_framework import request
-
-from rest_framework.renderers import JSONRenderer
-
+import time
+from celery import shared_task, Celery
 from apps.data.models import Document, Summary, Question
-from apps.api.views import DocumentViewSet
 
-from apps.api.tasks import upload_document_task as udt
+app = Celery('searing_ai')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
 
 
-@shared_task
-def process_document_task(document_id):
+@app.task
+def wait_for_text_extraction_task(document_id):
+    """
+    Wait for text extraction to finish.
+    """
+    document = Document.objects.get(id=document_id)
+    response = document.get_text_extraction()
+    if response != 'DONE':
+        time.sleep(15)
+        wait_for_text_extraction_task(document_id)
+    else:
+        extract_text_task(document_id)
+
+@app.task
+def start_text_extraction_task(document_id):
     document = Document.objects.get(pk=document_id)
-    # call api function to process document
+    document.start_text_extraction()
+    wait_for_text_extraction_task(document_id)
 
+@app.task
+def extract_text_task(document_id):
+    document = Document.objects.get(pk=document_id)
+    document.extract_text()
+    return True
