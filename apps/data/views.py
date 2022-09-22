@@ -58,7 +58,6 @@ def upload(request):
             doc.save()
             success = True
             # start processing document
-            # doc.start_text_extraction()
             start_text_extraction_task.delay(doc.id)
         if success:
             messages.success(request, 'Document is processing! Please check back later. :)')

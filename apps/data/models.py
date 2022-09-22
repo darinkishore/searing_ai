@@ -93,7 +93,6 @@ class Document(BaseModel):
         self.job_id = job_id['JobId']
         self.save()
 
-
     def get_text_extraction(self):
         # polls the SNS topic for the job id
         # if the job is complete, it will return the text
@@ -124,20 +123,19 @@ class Document(BaseModel):
         blocks = text['Blocks']
         pages = []
         doc_text = ''
+        doc_text.encode('utf-8')
         for block in blocks:
             if block['BlockType'] == 'PAGE':
                 pages.append(block['Page'])
 
         # TODO: add processing by line location
 
-        for page in pages:
+        for page in range(1, max(pages) + 1):
             page_text = ''
             for block in blocks:
-                if block['BlockType'] == 'LINE' and block['Page'] == page:
-                    page_text.append(block['Text'], encoding='utf-8')
-                    page_text.append(' ', encoding='utf-8')
-                    page_text.append('\n', encoding='utf-8')
-            doc_text.append(page_text, encoding='utf-8')
+                if block['BlockType'] == 'LINE':
+                    page_text += block['Text'] + ' ' + '\n'
+            doc_text += page_text + '\n'
 
         # create text file of content and save to s3
         doc_text = doc_text.encode()
