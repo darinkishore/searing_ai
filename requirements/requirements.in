@@ -18,3 +18,5 @@ django-environ
 redis[hiredis]
 hypothesis[django]
 requests
+openai
+django-annoying

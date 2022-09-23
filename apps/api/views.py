@@ -60,12 +60,6 @@ class SummaryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = SummarySerializer
 
-    def create_summary(self, document):
-        """
-        Create a summary for a document.
-        """
-        pass
-
     def get_queryset(self):
         # Show only the summary for the document that the user owns
         return Summary.objects.filter(document__user=self.request.user)

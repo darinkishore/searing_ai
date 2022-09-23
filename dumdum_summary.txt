@@ -1,2 +1,3 @@
-Dummy PDF file 
 
+
+This is a dummy PDF file. It is used to test PDF file handling in the software. It is not a real PDF file.

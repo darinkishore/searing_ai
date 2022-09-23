@@ -1,16 +1,14 @@
-import time
-
 from django.core.files.base import ContentFile
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-
-
 import boto3
 import environ
-import string
+import openai
+from annoying.fields import AutoOneToOneField
+
 
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
@@ -21,7 +19,6 @@ environ.Env.read_env()
 AWS_ACCESS_KEY_ID = env('TEXTRACT_CRED')
 AWS_SECRET_ACCESS_KEY = env('TEXTRACT_PASS')
 AWS_REGION = env('AWS_REGION')
-
 
 
 class Document(BaseModel):
@@ -38,7 +35,6 @@ class Document(BaseModel):
 
     ocr_text = models.FileField(storage=PrivateMediaStorage,
                                 upload_to="documents/", default=None, blank=True, null=True)
-
 
     def is_processed(self):
         return self.job_id
@@ -88,13 +84,12 @@ class Document(BaseModel):
                 }
             },
             NotificationChannel={
-                'SNSTopicArn': 'arn:aws:sns:us-east-1:361149468120:TextractSNSTopic',
-                'RoleArn': 'arn:aws:iam::361149468120:role/text'})
+                'SNSTopicArn': env('SNS_TOPIC_ARN'),
+                'RoleArn': env('SNS_ROLE_ARN')})
         self.job_id = job_id['JobId']
         self.save()
 
     def get_text_extraction(self):
-        # polls the SNS topic for the job id
         # if the job is complete, it will return the text
         # if the job is not complete, it will return None
         # if the job is already done, it will return the text
@@ -139,35 +134,80 @@ class Document(BaseModel):
 
         # create text file of content and save to s3
         doc_text = doc_text.encode()
-        with open(f'{self.title}_summary.txt', 'wb') as f:
+        with open(f'{self.title}_text.txt', 'wb') as f:
             f.write(doc_text)
-        self.ocr_text.save(f'{self.title}_summary.txt', ContentFile(doc_text))
+        self.ocr_text.save(f'{self.title}_text.txt', ContentFile(doc_text))
+
+    def create_summary(self):
+        """
+        create a summary of the document
+        """
+        openai.api_key = env('OPENAI_KEY')
+        text_to_summarize = self.ocr_text.read().decode('utf-8')
+
+        text_to_summarize = text_to_summarize.split('.')
+        # list of sentence strings
+        broken_text = []
+        block = []
+        for sentence in text_to_summarize:  # string
+            # count characters in sentence
+            sent_len = len(sentence)
+            if len(block) + sent_len < 13000:  # should be approximately within token length
+                block.append(sentence)
+            # if the block is too long, append it to the broken text list
+            elif len(block) + sent_len >= 13000:
+                broken_text.append(block)
+                block = []
+            # if the sentence is the last sentence in the document
+            if sentence == text_to_summarize[-1]:
+                broken_text.append(block)
+
+
+        summary = ''
+        for block in broken_text:
+            block_content = ' '.join(block).strip()
+            response = openai.Completion.create(
+                model="text-davinci-002",
+                prompt=f'Summarize the given text for a university student.'
+                       f'Give them the most important information to '
+                       f'learn the content of this text.\n'
+                       f'Given text: \n {block_content} <|endoftext|>',
+                max_tokens=400,
+                temperature=0.3,
+                presence_penalty=-0.75,
+            )
+            summary += response['choices'][0]['text'] + '\n'
+
+        summary = summary.encode()
+        with open(f'{self.title}_summary.txt', 'wb') as f:
+            f.write(summary)
+
+        self.summary.content.save(f'{self.title}_summary.txt', ContentFile(summary))
+
+    def generate_questions(self):
+        pass
+
 
 
 # summary, questions are one-one field with document
 
 class Summary(BaseModel):
-    document = models.OneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
+    document = AutoOneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
                                     null=True, default=None)
-    content = models.TextField(default=None)
+    content = models.FileField(storage=PrivateMediaStorage,
+                               upload_to="documents/", default=None, blank=True, null=True)
 
     @property
     def get_summary(self):
-        return self.content
-
-    # set summary
-    def set_summary(self, summary):
-        self.content = summary
-        self.save()
+        return self.content.read().decode('utf-8')
 
     def __str__(self):
         return f"Summary of {self.document.title}"
 
 
-
 class Question(BaseModel):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
-                                    null=True, default=None)
+                                 null=True, default=None)
 
     # delimited string, split by question mark
     question = models.TextField(default=None)

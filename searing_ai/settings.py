@@ -65,6 +65,7 @@ THIRD_PARTY_APPS = [
     'celery_progress',
     'storages',
     'widget_tweaks',
+    'annoying',
 ]
 
 PEGASUS_APPS = [

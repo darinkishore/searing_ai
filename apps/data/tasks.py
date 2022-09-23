@@ -30,4 +30,10 @@ def start_text_extraction_task(document_id):
 def extract_text_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.extract_text()
+    create_summary_task(document_id)
+
+@app.task
+def create_summary_task(document_id):
+    document = Document.objects.get(pk=document_id)
+    document.create_summary()
     return True
