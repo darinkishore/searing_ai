@@ -31,9 +31,14 @@ def extract_text_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.extract_text()
     create_summary_task(document_id)
+    create_questions_task(document_id)
 
 @app.task
 def create_summary_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.create_summary()
-    return True
+
+@app.task
+def create_questions_task(document_id):
+    document = Document.objects.get(pk=document_id)
+    document.generate_questions()

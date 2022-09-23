@@ -64,13 +64,12 @@ def upload(request):
         else:
             messages.error(request, 'Document upload failed')
         # redirect to home view
-        return redirect('data:home')
+        return redirect('data:upload')
 
 
 @login_required
 def summary_view(request, pk):
     document = get_object_or_404(Document, pk=pk)
-    # see if doc ocr is done
     summary = Summary.objects.filter(document=document).first()
     return render(request, 'data/summary.html', {'summary': summary})
 

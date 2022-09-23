@@ -1,3 +1,5 @@
+import os
+
 from django.core.files.base import ContentFile
 from django.db import models
 from django.conf import settings
@@ -137,6 +139,8 @@ class Document(BaseModel):
         with open(f'{self.title}_text.txt', 'wb') as f:
             f.write(doc_text)
         self.ocr_text.save(f'{self.title}_text.txt', ContentFile(doc_text))
+        # delete the text file from the local machine
+        os.remove(f'{self.title}_text.txt')
 
     def create_summary(self):
         """
@@ -183,11 +187,65 @@ class Document(BaseModel):
             f.write(summary)
 
         self.summary.content.save(f'{self.title}_summary.txt', ContentFile(summary))
+        # delete the text file from the local machine
+        os.remove(f'{self.title}_summary.txt')
 
     def generate_questions(self):
-        pass
+        """
+        generate questions for the document
+        """
+        openai.api_key = env('OPENAI_KEY')
+        text_to_generate_questions = self.summary.get_summary
 
+        num_questions = len(text_to_generate_questions) / 100
+        if num_questions <= 1:
+            num_questions = 3
 
+        response = openai.Completion.create(
+            model="text-davinci-002",
+            prompt=f'Given this text, generate {num_questions} questions to test'
+                   f'understanding of the text. The questions should'
+                   f'be at the level of a university student, and test'
+                   f'recall of the content, background information, and application of the content'
+                   f'to other mediums. They should not be easy, unless they test recall.\n'
+                   f'At least one of the questions should relate to an application of the content. \n'
+                   f'Examples:\n'
+                   f'Q: What is the main idea of this text?\n'
+                   f'A: The author argues for institutional reform to improve the lives of the poor.\n'
+                   f'Q: What does the term \"institutional reform\" mean?\n'
+                   f'A: Institutional reform is a change in the way that a society is organized.\n'
+                   f'Q: Why would institutional reform be necessary, according to the author?\n'
+                   f'A: The author argues that the rich owe a moral debt to humanity.\n'
+                   f'Q: What would institutional reform create? (The answer to this is not provided by the document)\n'
+                   f'A: A more just society.\n'
+                   f'Given text: \n {text_to_generate_questions}'
+                   f'<|endoftext|>',
+            max_tokens=400,
+            temperature=0.7,
+            presence_penalty=.15,
+        )
+
+        questions = response['choices'][0]['text']
+        # questions will be in Q: \n A: \n format.
+        # get question answer pairs, generated from paired Q: and A: prompts.
+        question_pair = questions.split('Q: ')
+        question_answer_pairs = []
+        for pair in question_pair:
+            if pair != '' or pair != '\n\n':
+                question_answer_pairs.append(pair.split('A: '))
+
+        # create question object for each pair
+        for pair in question_answer_pairs:
+            if len(pair) == 2:
+                question = pair[0].strip()
+                answer = pair[1].strip()
+                Question.objects.create(
+                    question=question,
+                    answer=answer,
+                    document=self
+                )
+            else:
+                continue
 
 # summary, questions are one-one field with document
 
