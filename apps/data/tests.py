@@ -1,10 +1,22 @@
 from django.test import TestCase
 
-# Create your tests here.
+from .models import Document, Summary, Question
 
-# write tests for the following:
-#   - upload a document
-#   - view a document
+# use pytest, not hypothesis. that's too complicated for now.
 
+# test that another user cannot access a document that is not theirs
 
-from django.test import TestCase
+# test that you can delete a document
+
+# for forms, test that all uploaded documents
+# have a filetype of pdf, and a title
+
+# test that uploading the dummy pdf activates text extraction
+
+# test that the text extraction task works: ie returns something in ocr_text
+
+# test that summarizing and questions both work.
+# for the dummy pdf, you should have 3 questions.
+
+# test uploading profile pictures
+
