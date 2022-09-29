@@ -6,7 +6,6 @@ from rest_framework_api_key.models import APIKey
 from apps.users.models import CustomUser
 from apps.data.models import Document, Summary, Question
 
-
 class UserSerializer(serializers.ModelSerializer):
 
     # define a document link with the documents for the current user
@@ -21,6 +20,21 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'documents',
                   'is_superuser', 'date_joined', 'last_login']
 
+
+class DocumentFormSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Document.objects.create(**validated_data)
+
+    def validate(self, data):
+        instance = Document(**data)
+        instance.full_clean()
+        return data
+
+    class Meta:
+        model = Document
+        fields = ['file', 'title']
+
+
 class DocumentSerializer(serializers.ModelSerializer):
 
     # link to the user who created the document
@@ -29,19 +43,19 @@ class DocumentSerializer(serializers.ModelSerializer):
         view_name='api:users-detail'
     )
 
-    class Meta:
-        model = Document
-        fields = ('id', 'file', 'created_at', 'title', 'updated_at', 'user',
-                  'summary', 'questions', 'ocr_text')
-
     def create(self, validated_data):
-        document = Document.objects.create(**validated_data)
-        return document
+        return Document.objects.create(**validated_data)
 
     def validate(self, data):
         instance = Document(**data)
         instance.full_clean()
         return data
+
+    class Meta:
+        model = Document
+        fields = ('id', 'file', 'created_at', 'title', 'updated_at', 'user',
+                  'summary', 'questions', 'ocr_text')
+
 
 class SummarySerializer(serializers.ModelSerializer):
 

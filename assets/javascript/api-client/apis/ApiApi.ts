@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   Document,
+  DocumentForm,
   PaginatedDocumentList,
   PaginatedQuestionList,
   PaginatedSummaryList,
@@ -29,6 +30,8 @@ import type {
 import {
     DocumentFromJSON,
     DocumentToJSON,
+    DocumentFormFromJSON,
+    DocumentFormToJSON,
     PaginatedDocumentListFromJSON,
     PaginatedDocumentListToJSON,
     PaginatedQuestionListFromJSON,
@@ -48,6 +51,11 @@ import {
     UserFromJSON,
     UserToJSON,
 } from '../models';
+
+export interface ApiDocFormCreateRequest {
+    title?: string;
+    file?: string;
+}
 
 export interface ApiDocumentsCreateRequest {
     id: number;
@@ -179,6 +187,96 @@ export interface ApiUsersRetrieveRequest {
  * 
  */
 export class ApiApi extends runtime.BaseAPI {
+
+    /**
+     * API endpoint that allows documents to be created.
+     */
+    async apiDocFormCreateRaw(requestParameters: ApiDocFormCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentForm>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.title !== undefined) {
+            formParams.append('title', requestParameters.title as any);
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        const response = await this.request({
+            path: `/api/doc-form`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFormFromJSON(jsonValue));
+    }
+
+    /**
+     * API endpoint that allows documents to be created.
+     */
+    async apiDocFormCreate(requestParameters: ApiDocFormCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentForm> {
+        const response = await this.apiDocFormCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * API endpoint that allows documents to be created.
+     */
+    async apiDocFormRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentForm>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/doc-form`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFormFromJSON(jsonValue));
+    }
+
+    /**
+     * API endpoint that allows documents to be created.
+     */
+    async apiDocFormRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentForm> {
+        const response = await this.apiDocFormRetrieveRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      * Allows you to list, create, retrieve, update, and destroy documents.

@@ -2,6 +2,7 @@ import boto3
 import environ
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -64,7 +65,7 @@ def upload(request):
         else:
             messages.error(request, 'Document upload failed')
         # redirect to home view
-        return redirect('data:upload')
+        return redirect(reverse('data:upload'))
 
 
 @login_required

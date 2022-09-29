@@ -1,6 +1,4 @@
 import App from './App.svelte';
-import {ApiApi} from "../api-client";
-import {getApiConfiguration} from "../api";
 
 
 const app = new App({

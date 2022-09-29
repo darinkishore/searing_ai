@@ -5,6 +5,7 @@ index.ts
 models/AggregateEmployeeData.ts
 models/DepartmentEnum.ts
 models/Document.ts
+models/DocumentForm.ts
 models/Employee.ts
 models/PaginatedDocumentList.ts
 models/PaginatedEmployeeList.ts

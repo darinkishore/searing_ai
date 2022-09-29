@@ -3,19 +3,24 @@ import environ
 import boto3
 import re
 import requests
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import action
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.generics import GenericAPIView
 from rest_framework import viewsets
 
 from apps.api.permissions import IsAuthenticatedOrHasUserAPIKey
 from apps.data.tasks import start_text_extraction_task
 from apps.users.models import CustomUser
 from apps.data.models import Document, Summary, Question
-from apps.api.serializers import DocumentSerializer, SummarySerializer, QuestionSerializer, UserSerializer
+from apps.api.serializers import DocumentSerializer, SummarySerializer, QuestionSerializer, UserSerializer, \
+    DocumentFormSerializer
 
 # basic CRUD classes for users, documents, summaries, and questions
 
@@ -32,6 +37,29 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
+class DocumentForm(GenericAPIView):
+    """
+    API endpoint that allows documents to be created.
+    """
+    # authentication_classes, permission_classes = IS_AUTHORIZED, IsAuthenticatedOrHasUserAPIKey
+
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'api/api_form.html'
+    serializer_class = DocumentFormSerializer
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
+
+    def get(self, request, *args, **kwargs):
+        serializer = DocumentFormSerializer()
+        return Response({'serializer': serializer})
+
+    def post(self, request, *args, **kwargs):
+        serializer = DocumentFormSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return redirect(reverse('DocumentForm'))
+        else:
+            return Response({'serializer': serializer})
+
 
 class DocumentViewSet(viewsets.ModelViewSet):
     """
@@ -42,7 +70,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = DocumentSerializer
-
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

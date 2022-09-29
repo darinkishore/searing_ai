@@ -3,36 +3,33 @@ import {ApiApi} from "../api-client";
 import {getApiConfiguration} from "../api";
 import {onMount, onDestroy, tick} from "svelte";
 import {writable} from "svelte/store";
+import {doc_list} from "../stores.js";
 
 // implement a document_list array store
 
-export let document_list = [];
 let elems = [];
 
 const client = new ApiApi(getApiConfiguration(SERVER_URL_BASE));
 
-function fetchUpdateDocuments() {
+onMount(async () => {
     let documents = [];
-    onMount(async () => {
-        await tick();
-        let docs = await client.apiDocumentsList()
-        docs['results'].forEach(doc => {
-            documents.push(doc);
-        })
-        documents.sort((a, b) => b.createdAt - a.createdAt);
-        elems = elems.filter((elem) => (elem !== null));
-        document_list = documents;
-    });
-}
-
+    await tick();
+    // docs is a temp var to hold results of call
+    let docs = await client.apiDocumentsList()
+    docs['results'].forEach(doc => {
+        documents.push(doc);
+    })
+    documents.sort((a, b) => b.createdAt - a.createdAt);
+    elems = elems.filter((elem) => (elem !== null));
+    doc_list.set(documents);
+});
 
 function deleteDocument(id) {
     client.apiDocumentsDestroy({'id' : id});
     elems = elems.filter((elem) => (elem !== null));
-    fetchUpdateDocuments();
+    doc_list.update((docs) => docs.filter((doc) => doc.id !== id));
 }
 
-fetchUpdateDocuments();
 
 </script>
 
@@ -72,7 +69,7 @@ fetchUpdateDocuments();
                         <tbody  class="divide-y divide-gray-200 bg-white">
 
                         <!-- Table rows -->
-                        {#each document_list as doc, index}
+                        {#each $doc_list as doc, index}
                             <tr bind:this={elems[index]}>
                                 <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
                                     <a href="{doc.file}" class="text-indigo-600 font-semibold hover:link hover:text-indigo-900">{doc.title}</a>

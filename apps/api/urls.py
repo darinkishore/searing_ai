@@ -19,6 +19,7 @@ router.register(r'users', views.UserViewSet, basename='users')
 
 
 urlpatterns = [
+    path('doc-form', views.DocumentForm.as_view(), name='doc-form'),
     path('', include(router.urls)),
 ]
 

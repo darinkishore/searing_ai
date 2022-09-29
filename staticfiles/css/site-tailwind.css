@@ -9312,18 +9312,18 @@ body[dir="rtl"] .checkbox:checked,
     aspect-ratio: 3 / 2;
 }
 
-.hover\:link:hover {
+  .hover\:link:hover {
     cursor: pointer;
     -webkit-text-decoration-line: underline;
     text-decoration-line: underline;
 }
 
-.hover\:link:hover:focus {
+  .hover\:link:hover:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.hover\:link:hover:focus-visible {
+  .hover\:link:hover:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
 }

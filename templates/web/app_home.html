@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block app %}
+<script>
+    const SERVER_URL_BASE = "{{ server_url }}";
+</script>
 
 <section id="upload-form" class="app-card">
     <div class="pg-columns pg-columns-reversed pg-align-items-center">
@@ -17,7 +20,9 @@
             class = max-w-lg></div>
         </div>
     </div>
+</section>
 
+<section id="svelte-form" class="app-card">
 </section>
 
 <section id="doc-table" class="app-card ">
@@ -37,7 +42,8 @@
     <script>
         const STATIC_FILES = {};
         const urlBase = "{{ url_base }}";
-        const SERVER_URL_BASE = "{{ server_url }}";
+
     </script>
     <script src="{% static 'js/doc-table-bundle.js' %}"></script>
+    <script src="{% static 'js/doc-form-bundle.js' %}"></script>
 {% endblock %}

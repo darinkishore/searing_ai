@@ -3,6 +3,7 @@
 export * from './AggregateEmployeeData';
 export * from './DepartmentEnum';
 export * from './Document';
+export * from './DocumentForm';
 export * from './Employee';
 export * from './PaginatedDocumentList';
 export * from './PaginatedEmployeeList';

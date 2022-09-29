@@ -1,7 +1,7 @@
 
 
 {% load i18n %}
-{% load widget_tweaks %}
+{% load rest_framework %}
 
 
 <form action="{% url "data:upload" %}" method="POST" enctype="multipart/form-data" id="api-form">
@@ -19,9 +19,9 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+
     <div class="py-4">
-        {% render_field form.file class+="pb-4" %}
-        {% render_field form.title placeholder="Document Title" %}
+        {% render_form serializer %}
     </div>
 
     <!-- On submit, this triggers the hx-post request. -->
