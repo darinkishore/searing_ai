@@ -36,7 +36,7 @@ export interface Summary {
      * @type {string}
      * @memberof Summary
      */
-    content?: string;
+    content?: string | null;
     /**
      * 
      * @type {Date}

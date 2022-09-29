@@ -244,7 +244,6 @@ USE_TZ = True
 USE_SPACES = True
 
 if USE_SPACES:
-    # settings
     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = 'moshistatic'
@@ -252,11 +251,17 @@ if USE_SPACES:
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
-    # static settings
 
-    STATIC_LOCATION = ''
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+    # static settings
+    if DEBUG:
+        STATIC_ROOT = BASE_DIR / 'staticfiles'
+        STATIC_URL = '/static/'
+        STATIC_LOCATION = 'static'
+    else:
+        STATIC_LOCATION = ''
+        STATICFILES_STORAGE = 'apps.data.storage_backends.StaticStorage'
+        STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
     DEFAULT_FILE_STORAGE = 'apps.data.storage_backends.PublicMediaStorage'
@@ -270,10 +275,8 @@ else:
     MEDIA_ROOT = BASE_DIR / 'media'
     MEDIA_URL = '/media/'
 
-# should be modified to look in static_url
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # uncomment to use manifest storage to bust cache when file change
 # note: this may break some image references in sass files which is why it is not enabled by default

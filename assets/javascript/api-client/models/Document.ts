@@ -55,6 +55,24 @@ export interface Document {
      * @memberof Document
      */
     readonly user: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Document
+     */
+    summary: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Document
+     */
+    questions: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Document
+     */
+    ocrText?: string | null;
 }
 
 /**
@@ -66,6 +84,8 @@ export function instanceOfDocument(value: object): boolean {
     isInstance = isInstance && "createdAt" in value;
     isInstance = isInstance && "updatedAt" in value;
     isInstance = isInstance && "user" in value;
+    isInstance = isInstance && "summary" in value;
+    isInstance = isInstance && "questions" in value;
 
     return isInstance;
 }
@@ -86,6 +106,9 @@ export function DocumentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'title': !exists(json, 'title') ? undefined : json['title'],
         'updatedAt': (new Date(json['updated_at'])),
         'user': json['user'],
+        'summary': json['summary'],
+        'questions': json['questions'],
+        'ocrText': !exists(json, 'ocr_text') ? undefined : json['ocr_text'],
     };
 }
 
@@ -100,6 +123,9 @@ export function DocumentToJSON(value?: Document | null): any {
         
         'file': value.file,
         'title': value.title,
+        'summary': value.summary,
+        'questions': value.questions,
+        'ocr_text': value.ocrText,
     };
 }
 

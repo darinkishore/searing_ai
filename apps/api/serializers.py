@@ -38,6 +38,11 @@ class DocumentSerializer(serializers.ModelSerializer):
         document = Document.objects.create(**validated_data)
         return document
 
+    def validate(self, data):
+        instance = Document(**data)
+        instance.full_clean()
+        return data
+
 class SummarySerializer(serializers.ModelSerializer):
 
     # link to the document that the summary is for

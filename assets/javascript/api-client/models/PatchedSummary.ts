@@ -36,7 +36,7 @@ export interface PatchedSummary {
      * @type {string}
      * @memberof PatchedSummary
      */
-    content?: string;
+    content?: string | null;
     /**
      * 
      * @type {Date}

@@ -1,0 +1,31 @@
+
+
+{% load i18n %}
+{% load widget_tweaks %}
+
+
+<form action="{% url "data:upload" %}" method="POST" enctype="multipart/form-data" id="api-form">
+    {% csrf_token %}
+    {% if messages %}
+        {% for m in messages %}
+            {% if m.level == 25 %}
+                <div class="alert alert-success">
+                    {{ m }}
+                </div>
+            {% else %}
+                <div class="alert alert-error">
+                    {{ m }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <div class="py-4">
+        {% render_field form.file class+="pb-4" %}
+        {% render_field form.title placeholder="Document Title" %}
+    </div>
+
+    <!-- On submit, this triggers the hx-post request. -->
+    <button type="submit" class="pg-button pg-button-secondary">
+        {% translate "Upload" %}</button>
+
+</form>

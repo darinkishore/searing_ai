@@ -54,15 +54,14 @@ export interface ApiDocumentsCreateRequest {
     createdAt: Date;
     updatedAt: Date;
     user: string;
+    summary: number;
+    questions: Array<number>;
     file?: string;
     title?: string;
+    ocrText?: string | null;
 }
 
 export interface ApiDocumentsDestroyRequest {
-    id: string;
-}
-
-export interface ApiDocumentsGetDocTextRetrieveRequest {
     id: string;
 }
 
@@ -78,6 +77,9 @@ export interface ApiDocumentsPartialUpdateRequest {
     title?: string;
     updatedAt?: Date;
     user?: string;
+    summary?: number;
+    questions?: Array<number>;
+    ocrText?: string | null;
 }
 
 export interface ApiDocumentsQuestionsCreateRequest {
@@ -116,7 +118,7 @@ export interface ApiDocumentsRetrieveRequest {
     id: string;
 }
 
-export interface ApiDocumentsStartDocTextDetectionRetrieveRequest {
+export interface ApiDocumentsStartSummaryGenerationRetrieveRequest {
     id: string;
 }
 
@@ -158,8 +160,11 @@ export interface ApiDocumentsUpdateRequest {
     createdAt: Date;
     updatedAt: Date;
     user: string;
+    summary: number;
+    questions: Array<number>;
     file?: string;
     title?: string;
+    ocrText?: string | null;
 }
 
 export interface ApiUsersListRequest {
@@ -193,6 +198,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters.user === null || requestParameters.user === undefined) {
             throw new runtime.RequiredError('user','Required parameter requestParameters.user was null or undefined when calling apiDocumentsCreate.');
+        }
+
+        if (requestParameters.summary === null || requestParameters.summary === undefined) {
+            throw new runtime.RequiredError('summary','Required parameter requestParameters.summary was null or undefined when calling apiDocumentsCreate.');
+        }
+
+        if (requestParameters.questions === null || requestParameters.questions === undefined) {
+            throw new runtime.RequiredError('questions','Required parameter requestParameters.questions was null or undefined when calling apiDocumentsCreate.');
         }
 
         const queryParameters: any = {};
@@ -243,6 +256,18 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters.user !== undefined) {
             formParams.append('user', requestParameters.user as any);
+        }
+
+        if (requestParameters.summary !== undefined) {
+            formParams.append('summary', requestParameters.summary as any);
+        }
+
+        if (requestParameters.questions) {
+            formParams.append('questions', requestParameters.questions.join(runtime.COLLECTION_FORMATS["csv"]));
+        }
+
+        if (requestParameters.ocrText !== undefined) {
+            formParams.append('ocr_text', requestParameters.ocrText as any);
         }
 
         const response = await this.request({
@@ -298,43 +323,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDocumentsDestroy(requestParameters: ApiDocumentsDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiDocumentsDestroyRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Get the text from a document.
-     */
-    async apiDocumentsGetDocTextRetrieveRaw(requestParameters: ApiDocumentsGetDocTextRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsGetDocTextRetrieve.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
-        }
-        const response = await this.request({
-            path: `/api/documents/{id}/get_doc_text`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentFromJSON(jsonValue));
-    }
-
-    /**
-     * Get the text from a document.
-     */
-    async apiDocumentsGetDocTextRetrieve(requestParameters: ApiDocumentsGetDocTextRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
-        const response = await this.apiDocumentsGetDocTextRetrieveRaw(requestParameters, initOverrides);
-        return await response.value();
     }
 
     /**
@@ -430,6 +418,18 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters.user !== undefined) {
             formParams.append('user', requestParameters.user as any);
+        }
+
+        if (requestParameters.summary !== undefined) {
+            formParams.append('summary', requestParameters.summary as any);
+        }
+
+        if (requestParameters.questions) {
+            formParams.append('questions', requestParameters.questions.join(runtime.COLLECTION_FORMATS["csv"]));
+        }
+
+        if (requestParameters.ocrText !== undefined) {
+            formParams.append('ocr_text', requestParameters.ocrText as any);
         }
 
         const response = await this.request({
@@ -739,11 +739,11 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * Process a document via Amazon Textract to get its contents.
+     * Allows you to list, create, retrieve, update, and destroy documents.
      */
-    async apiDocumentsStartDocTextDetectionRetrieveRaw(requestParameters: ApiDocumentsStartDocTextDetectionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
+    async apiDocumentsStartSummaryGenerationRetrieveRaw(requestParameters: ApiDocumentsStartSummaryGenerationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Document>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsStartDocTextDetectionRetrieve.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiDocumentsStartSummaryGenerationRetrieve.');
         }
 
         const queryParameters: any = {};
@@ -758,7 +758,7 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
         const response = await this.request({
-            path: `/api/documents/{id}/start_doc_text_detection`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/api/documents/{id}/start_summary_generation`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -768,10 +768,10 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * Process a document via Amazon Textract to get its contents.
+     * Allows you to list, create, retrieve, update, and destroy documents.
      */
-    async apiDocumentsStartDocTextDetectionRetrieve(requestParameters: ApiDocumentsStartDocTextDetectionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
-        const response = await this.apiDocumentsStartDocTextDetectionRetrieveRaw(requestParameters, initOverrides);
+    async apiDocumentsStartSummaryGenerationRetrieve(requestParameters: ApiDocumentsStartSummaryGenerationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Document> {
+        const response = await this.apiDocumentsStartSummaryGenerationRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1049,6 +1049,14 @@ export class ApiApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('user','Required parameter requestParameters.user was null or undefined when calling apiDocumentsUpdate.');
         }
 
+        if (requestParameters.summary === null || requestParameters.summary === undefined) {
+            throw new runtime.RequiredError('summary','Required parameter requestParameters.summary was null or undefined when calling apiDocumentsUpdate.');
+        }
+
+        if (requestParameters.questions === null || requestParameters.questions === undefined) {
+            throw new runtime.RequiredError('questions','Required parameter requestParameters.questions was null or undefined when calling apiDocumentsUpdate.');
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1097,6 +1105,18 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters.user !== undefined) {
             formParams.append('user', requestParameters.user as any);
+        }
+
+        if (requestParameters.summary !== undefined) {
+            formParams.append('summary', requestParameters.summary as any);
+        }
+
+        if (requestParameters.questions) {
+            formParams.append('questions', requestParameters.questions.join(runtime.COLLECTION_FORMATS["csv"]));
+        }
+
+        if (requestParameters.ocrText !== undefined) {
+            formParams.append('ocr_text', requestParameters.ocrText as any);
         }
 
         const response = await this.request({

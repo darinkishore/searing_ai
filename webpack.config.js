@@ -3,6 +3,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const mode = process.env.NODE_ENV || 'development';
+const prod = mode === 'production';
+
 module.exports = {
   entry: {
     'site-base': './assets/site-base.js',  // base styles shared between frameworks
@@ -11,6 +14,7 @@ module.exports = {
     pegasus: './assets/javascript/pegasus/pegasus.js',
     'react-object-lifecycle': './assets/javascript/pegasus/examples/react/react-object-lifecycle.js',
     'vue-object-lifecycle': './assets/javascript/pegasus/examples/vue/vue-object-lifecycle.js',
+    'doc-table': './assets/javascript/data/doc-table.js',
   },
   output: {
     path: path.resolve(__dirname, './static'),
@@ -18,7 +22,11 @@ module.exports = {
     library: ["SiteJS", "[name]"],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+        svelte: path.resolve('node_modules', 'svelte'),
+    },
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.svelte'],
+    mainFields: ['svelte', 'browser', 'module', 'main'],
   },
   module: {
     rules: [
@@ -47,8 +55,29 @@ module.exports = {
           'postcss-loader'
         ],
       },
+        {
+          test: /\.svelte$/,
+          use: {
+              loader: 'svelte-loader',
+              options: {
+                  compilerOptions: {
+                      dev: true
+                  },
+                  emitCss: true,
+                  hotReload: true
+              }
+          }
+      },
+        {
+				// required to prevent errors from Svelte on Webpack 5+
+				test: /node_modules\/svelte\/.*\.mjs$/,
+				resolve: {
+					fullySpecified: false
+				}
+			},
     ],
   },
+  mode,
   plugins: [
     new MiniCssExtractPlugin({
       'filename': 'css/[name].css',

@@ -11,6 +11,8 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import viewsets
 
+from apps.api.permissions import IsAuthenticatedOrHasUserAPIKey
+from apps.data.tasks import start_text_extraction_task
 from apps.users.models import CustomUser
 from apps.data.models import Document, Summary, Question
 from apps.api.serializers import DocumentSerializer, SummarySerializer, QuestionSerializer, UserSerializer
@@ -36,10 +38,11 @@ class DocumentViewSet(viewsets.ModelViewSet):
     Allows you to list, create, retrieve, update, and destroy documents.
     """
     authentication_classes = IS_AUTHORIZED
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrHasUserAPIKey]
 
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = DocumentSerializer
+
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -50,6 +53,11 @@ class DocumentViewSet(viewsets.ModelViewSet):
     def get_object(self):
         return get_object_or_404(Document, pk=self.kwargs['pk'])
 
+    @action(detail=True, methods=['get'])
+    def start_summary_generation(self, request, pk=None):
+        start_text_extraction_task(pk)
+
+
 
 class SummaryViewSet(viewsets.ModelViewSet):
     """
@@ -57,12 +65,12 @@ class SummaryViewSet(viewsets.ModelViewSet):
     a document's one summary.
     """
     authentication_classes = IS_AUTHORIZED
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrHasUserAPIKey]
     serializer_class = SummarySerializer
 
     def get_queryset(self):
         # Show only the summary for the document that the user owns
-        return Summary.objects.filter(document__user=self.request.user)
+        return Summary.objects.filter(document__user=self.request.user).first()
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -70,7 +78,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     Allows you to list, create, retrieve, update, and destroy questions.
     """
     authentication_classes = IS_AUTHORIZED
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrHasUserAPIKey]
     serializer_class = QuestionSerializer
 
     def get_queryset(self):

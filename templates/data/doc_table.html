@@ -34,10 +34,10 @@
                                 <p class="group inline-flex">Last Modified</p>
                             </th>
                             <th id="summary" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                <p class="group inline-flex">Summary</p>
+                                <p class="group inline-flex"></p>
                             </th>
                             <th id="questions" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                <p class="group inline-flex">Questions</p>
+                                <p class="group inline-flex"></p>
                             </th>
                             <th id = "download" scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                 <span class="sr-only"></span>
@@ -65,15 +65,15 @@
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     <a href="{% url 'data:summary' doc.pk %}"
                                     class="text-indigo-600 hover:text-indigo-900" >
-                                        View Summary</a>
+                                        Summary</a>
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                                     <a href="{% url 'data:questions' doc.pk %}"
                                        class="text-indigo-600 hover:text-indigo-900">
-                                        View Questions</a>
+                                        Questions</a>
                                 </td>
                                 <td class="px-3 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                    <a href="{{ doc.file.url }}" class="text-indigo-600 hover:text-indigo-900">View Document</a>
+                                    <a href="{{ doc.file.url }}" class="text-indigo-600 hover:text-indigo-900">Download</a>
                                 </td>
                             </tr>
                         {% endfor %}

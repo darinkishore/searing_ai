@@ -2,15 +2,13 @@
 {% load i18n %}
 {% load static %}
 
-{% load static %}
 {% block page_head %}
 
 {% endblock %}
 
 {% block app %}
 
-
-<section class="app-card">
+<section id="upload-form" class="app-card">
     <div class="pg-columns pg-columns-reversed pg-align-items-center">
         <div class="pg-column">
             <h1 class="pg-title">{% translate "Upload your documents!" %}</h1>
@@ -19,13 +17,27 @@
             class = max-w-lg></div>
         </div>
     </div>
+
 </section>
 
-<section class="app-card">
+<section id="doc-table" class="app-card ">
     <!-- Table of Documents-->
     <div id="table-holder" hx-get="{% url 'data:doc_table' %}"
          hx-select="#doctable" hx-target="this" hx-trigger="load">
     </div>
+
 </section>
 
+<section id="svelte-table" class="app-card">
+</section>
+
+{% endblock %}
+
+{% block page_js %}
+    <script>
+        const STATIC_FILES = {};
+        const urlBase = "{{ url_base }}";
+        const SERVER_URL_BASE = "{{ server_url }}";
+    </script>
+    <script src="{% static 'js/doc-table-bundle.js' %}"></script>
 {% endblock %}
