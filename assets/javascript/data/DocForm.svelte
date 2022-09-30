@@ -76,6 +76,7 @@ function handleUpload() {
 
 <main>
 
+<h1 class="pg-title mt-2 text-lg">Upload a Document!</h1>
 
 <form class="max-w-lg" enctype="multipart/form-data" on:submit|preventDefault={handleUpload} id="docform">
     <div class="py-4">

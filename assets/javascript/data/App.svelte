@@ -38,7 +38,7 @@ function deleteDocument(id) {
 <div id="doctable" class="px-2 sm:px-2 lg:px-2">
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
-            <h1 class="pg-title mt-2 text-lg">Svelte Documents:</h1>
+            <h1 class="pg-title mt-2 text-lg">Your Documents:</h1>
         </div>
     </div>
     <div class="mt-4 flex flex-col">
@@ -83,7 +83,7 @@ function deleteDocument(id) {
                                         Summary</a>
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <a href="/questions/{doc.id}"
+                                    <a href="doc{doc.id}/questions"
                                        class="text-indigo-600 hover:text-indigo-900">
                                         Questions</a>
                                 </td>

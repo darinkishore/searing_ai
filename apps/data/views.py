@@ -2,22 +2,13 @@ import boto3
 import environ
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from ..api.serializers import DocumentSerializer
-
-from django.urls import reverse
-
-from rest_framework import request
-
-from PyPDF2 import PdfFileWriter, PdfFileReader
 
 # import boto3 for amazon textract
 
-from apps.api import views as api
 from .tasks import start_text_extraction_task
 from ..web.views import home as web_home
 from .forms import DocumentForm
