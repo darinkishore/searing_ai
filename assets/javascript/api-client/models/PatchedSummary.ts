@@ -30,7 +30,7 @@ export interface PatchedSummary {
      * @type {string}
      * @memberof PatchedSummary
      */
-    readonly document?: string;
+    readonly document?: string | null;
     /**
      * 
      * @type {string}

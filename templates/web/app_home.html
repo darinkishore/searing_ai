@@ -7,30 +7,10 @@
 {% endblock %}
 
 {% block app %}
-<script>
-    const SERVER_URL_BASE = "{{ server_url }}";
-</script>
+<script>const SERVER_URL_BASE = "{{ server_url }}";</script>
 
-<section id="upload-form" class="app-card">
-    <div class="pg-columns pg-columns-reversed pg-align-items-center">
-        <div class="pg-column">
-            <h1 class="pg-title">{% translate "Upload your documents!" %}</h1>
-            <div id="form-holder" hx-get="{% url 'data:upload' %}"
-                 hx-select="#docform" hx-target="this" hx-trigger="load"
-            class = max-w-lg></div>
-        </div>
-    </div>
-</section>
 
 <section id="svelte-form" class="app-card">
-</section>
-
-<section id="doc-table" class="app-card ">
-    <!-- Table of Documents-->
-    <div id="table-holder" hx-get="{% url 'data:doc_table' %}"
-         hx-select="#doctable" hx-target="this" hx-trigger="load">
-    </div>
-
 </section>
 
 <section id="svelte-table" class="app-card">

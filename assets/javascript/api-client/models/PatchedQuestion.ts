@@ -30,7 +30,7 @@ export interface PatchedQuestion {
      * @type {string}
      * @memberof PatchedQuestion
      */
-    readonly document?: string;
+    readonly document?: string | null;
     /**
      * 
      * @type {string}

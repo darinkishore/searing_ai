@@ -6,6 +6,9 @@ from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from ..api.serializers import DocumentSerializer
+
 from django.urls import reverse
 
 from rest_framework import request
@@ -49,23 +52,18 @@ def upload(request):
         return render(request, 'data/document_form.html', {'form': DocumentForm()})
 
     if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        success = False
-        if form.is_valid():
-            doc = form.save(commit=False)
-            doc.title = request.POST['title']
-            doc.document = request.FILES['file']
-            doc.user = request.user
+        doc = Document(user=request.user, title=request.POST['title'], file=request.FILES['file.0'])
+        try:
+            doc.full_clean()
             doc.save()
-            success = True
-            # start processing document
             start_text_extraction_task.delay(doc.id)
-        if success:
             messages.success(request, 'Document is processing! Please check back later. :)')
-        else:
-            messages.error(request, 'Document upload failed')
-        # redirect to home view
-        return redirect(reverse('data:upload'))
+        except ValidationError as e:
+            messages.error(request, e)
+
+        return redirect('data:upload')
+
+
 
 
 @login_required

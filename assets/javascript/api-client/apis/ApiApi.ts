@@ -53,8 +53,8 @@ import {
 } from '../models';
 
 export interface ApiDocFormCreateRequest {
-    title?: string;
     file?: string;
+    title?: string;
 }
 
 export interface ApiDocumentsCreateRequest {
@@ -205,7 +205,7 @@ export class ApiApi extends runtime.BaseAPI {
         }
         const consumes: runtime.Consume[] = [
             { contentType: 'multipart/form-data' },
-            { contentType: 'application/x-www-form-urlencoded' },
+            { contentType: 'application/json' },
         ];
         // @ts-ignore: canConsumeForm may be unused
         const canConsumeForm = runtime.canConsumeForm(consumes);
@@ -218,12 +218,12 @@ export class ApiApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters.title !== undefined) {
-            formParams.append('title', requestParameters.title as any);
-        }
-
         if (requestParameters.file !== undefined) {
             formParams.append('file', requestParameters.file as any);
+        }
+
+        if (requestParameters.title !== undefined) {
+            formParams.append('title', requestParameters.title as any);
         }
 
         const response = await this.request({

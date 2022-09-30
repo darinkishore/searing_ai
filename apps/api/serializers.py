@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.serializers import PrimaryKeyRelatedField
 from rest_framework_api_key.models import APIKey
 
 
@@ -53,8 +54,8 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('id', 'file', 'created_at', 'title', 'updated_at', 'user',
-                  'summary', 'questions', 'ocr_text')
+        fields = ['id', 'file', 'created_at', 'title', 'updated_at', 'user',
+                  'summary', 'questions', 'ocr_text']
 
 
 class SummarySerializer(serializers.ModelSerializer):
@@ -62,7 +63,8 @@ class SummarySerializer(serializers.ModelSerializer):
     # link to the document that the summary is for
     document = serializers.HyperlinkedRelatedField(
         read_only=True,
-        view_name='api:documents-detail'
+        view_name='api:documents-detail',
+        allow_null=True
     )
 
     class Meta:
@@ -74,7 +76,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     # link to the document that the question is for
     document = serializers.HyperlinkedRelatedField(
         read_only=True,
-        view_name='api:documents-detail'
+        view_name='api:documents-detail',
+        allow_null=True
     )
 
     class Meta:

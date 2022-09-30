@@ -30,7 +30,7 @@ export interface Question {
      * @type {string}
      * @memberof Question
      */
-    readonly document: string;
+    readonly document: string | null;
     /**
      * 
      * @type {string}

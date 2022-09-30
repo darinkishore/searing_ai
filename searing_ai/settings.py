@@ -36,6 +36,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
 # timezone
 USE_TZ = True
 
@@ -66,6 +72,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'widget_tweaks',
     'annoying',
+
 ]
 
 PEGASUS_APPS = [
@@ -97,7 +104,6 @@ MIDDLEWARE = [
     'apps.web.locale_middleware.UserLocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'searing_ai.urls'

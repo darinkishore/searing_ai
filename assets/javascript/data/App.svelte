@@ -1,8 +1,9 @@
 <script>
 import {ApiApi} from "../api-client";
 import {getApiConfiguration} from "../api";
-import {onMount, onDestroy, tick} from "svelte";
-import {writable} from "svelte/store";
+import {onMount, afterUpdate, onDestroy, tick} from "svelte";
+import {fade} from "svelte/transition";
+import { quintInOut } from "svelte/easing";
 import {doc_list} from "../stores.js";
 
 // implement a document_list array store
@@ -11,25 +12,25 @@ let elems = [];
 
 const client = new ApiApi(getApiConfiguration(SERVER_URL_BASE));
 
-onMount(async () => {
+afterUpdate(async () => {
     let documents = [];
-    await tick();
     // docs is a temp var to hold results of call
-    let docs = await client.apiDocumentsList()
+    let docs = await client.apiDocumentsList().catch((err) => {});
     docs['results'].forEach(doc => {
         documents.push(doc);
     })
     documents.sort((a, b) => b.createdAt - a.createdAt);
     elems = elems.filter((elem) => (elem !== null));
-    doc_list.set(documents);
+    $doc_list = documents;
 });
 
 function deleteDocument(id) {
-    client.apiDocumentsDestroy({'id' : id});
+    client.apiDocumentsDestroy({'id' : id}).catch((err) => {
+        console.log(err);
+    });
     elems = elems.filter((elem) => (elem !== null));
     doc_list.update((docs) => docs.filter((doc) => doc.id !== id));
 }
-
 
 </script>
 
@@ -37,7 +38,7 @@ function deleteDocument(id) {
 <div id="doctable" class="px-2 sm:px-2 lg:px-2">
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
-            <h1 class="pg-title mt-2 text-lg">Your Documents:</h1>
+            <h1 class="pg-title mt-2 text-lg">Svelte Documents:</h1>
         </div>
     </div>
     <div class="mt-4 flex flex-col">
@@ -66,11 +67,10 @@ function deleteDocument(id) {
                             </th>
                         </tr>
                         </thead>
-                        <tbody  class="divide-y divide-gray-200 bg-white">
-
+                        <tbody class="divide-y divide-gray-200 bg-white">
                         <!-- Table rows -->
                         {#each $doc_list as doc, index}
-                            <tr bind:this={elems[index]}>
+                            <tr bind:this={elems[index]} transition:fade="{{duration: 400, easing:quintInOut}}" >
                                 <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
                                     <a href="{doc.file}" class="text-indigo-600 font-semibold hover:link hover:text-indigo-900">{doc.title}</a>
                                 </td>
@@ -87,7 +87,7 @@ function deleteDocument(id) {
                                        class="text-indigo-600 hover:text-indigo-900">
                                         Questions</a>
                                 </td>
-                                <td class="px-3 py-4 text-sm whitespace-nowrap text-right">
+                                <td hx-sync="this:drop" class="px-3 py-4 text-sm whitespace-nowrap text-right">
                                     <button on:click={() => deleteDocument(doc.id)}
                                        class="text-red-600 hover:link hover:text-red-900">
                                         Delete</button>

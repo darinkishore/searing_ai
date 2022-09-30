@@ -152,14 +152,16 @@ class Document(BaseModel):
         text_to_summarize = text_to_summarize.split('.')
         # list of sentence strings
         broken_text = []
+
         block = []
+        block_size = 0
         for sentence in text_to_summarize:  # string
             # count characters in sentence
-            sent_len = len(sentence)
-            if len(block) + sent_len < 13000:  # should be approximately within token length
+            if block_size + len(sentence) < 13000:  # should be approximately within token length
                 block.append(sentence)
-            # if the block is too long, append it to the broken text list
-            elif len(block) + sent_len >= 13000:
+                block_size += len(sentence)
+            # if the block is too long, append it to the broken text list and reset the block
+            elif block_size + len(sentence) >= 13000:
                 broken_text.append(block)
                 block = []
             # if the sentence is the last sentence in the document
@@ -244,8 +246,6 @@ class Document(BaseModel):
                     answer=answer,
                     document=self
                 )
-            else:
-                continue
 
 # summary, questions are one-one field with document
 

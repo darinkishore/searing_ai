@@ -24,13 +24,13 @@ export interface DocumentForm {
      * @type {string}
      * @memberof DocumentForm
      */
-    title?: string;
+    file?: string;
     /**
      * 
      * @type {string}
      * @memberof DocumentForm
      */
-    file?: string;
+    title?: string;
 }
 
 /**
@@ -52,8 +52,8 @@ export function DocumentFormFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'title': !exists(json, 'title') ? undefined : json['title'],
         'file': !exists(json, 'file') ? undefined : json['file'],
+        'title': !exists(json, 'title') ? undefined : json['title'],
     };
 }
 
@@ -66,8 +66,8 @@ export function DocumentFormToJSON(value?: DocumentForm | null): any {
     }
     return {
         
-        'title': value.title,
         'file': value.file,
+        'title': value.title,
     };
 }
 

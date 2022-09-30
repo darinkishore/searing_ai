@@ -46,13 +46,13 @@ class DocumentForm(GenericAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'api/api_form.html'
     serializer_class = DocumentFormSerializer
-    parser_classes = (JSONParser, MultiPartParser, FormParser)
+    parser_classes = MultiPartParser, JSONParser
 
     def get(self, request, *args, **kwargs):
         serializer = DocumentFormSerializer()
         return Response({'serializer': serializer})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = DocumentFormSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -72,6 +72,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
 
     def perform_create(self, serializer):
+        # create a document and set its id
         serializer.save(user=self.request.user)
 
     def get_queryset(self):

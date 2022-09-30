@@ -30,7 +30,7 @@ export interface Summary {
      * @type {string}
      * @memberof Summary
      */
-    readonly document: string;
+    readonly document: string | null;
     /**
      * 
      * @type {string}
