@@ -3,7 +3,9 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
     content: [
         './assets/**/*.js',
-        './assets/**/*.svelte',
+        './assets/**/**/*.js',
+        './assets/**/**/**/*.svelte',
+        './assets/**/**/**/*.js',
         './assets/*.js',
         './assets/**/*.vue',
         './templates/**/*.html',

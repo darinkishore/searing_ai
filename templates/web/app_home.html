@@ -7,13 +7,10 @@
 {% endblock %}
 
 {% block app %}
-<script>const SERVER_URL_BASE = "{{ server_url }}";</script>
-
-
 <section id="svelte-form" class="prose-lg app-card">
 </section>
 
-<section id="svelte-table" class="prose-lg app-card">
+<section id="svelte-table" class="app-card">
 </section>
 
 {% endblock %}
@@ -22,7 +19,6 @@
     <script>
         const STATIC_FILES = {};
         const urlBase = "{{ url_base }}";
-
     </script>
     <script src="{% static 'js/doc-table-bundle.js' %}"></script>
     <script src="{% static 'js/doc-form-bundle.js' %}"></script>

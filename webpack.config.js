@@ -16,6 +16,7 @@ module.exports = {
     'vue-object-lifecycle': './assets/javascript/pegasus/examples/vue/vue-object-lifecycle.js',
     'doc-table': './assets/javascript/data/doc-table.js',
     'doc-form': './assets/javascript/data/doc-form.js',
+    'flashcards': './assets/javascript/data/flashcards.js',
   },
   output: {
     path: path.resolve(__dirname, './static'),

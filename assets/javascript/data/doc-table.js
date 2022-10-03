@@ -1,4 +1,4 @@
-import App from './App.svelte';
+import App from './table/App.svelte';
 
 
 const app = new App({

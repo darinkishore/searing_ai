@@ -1,16 +1,31 @@
 <script>
-import {ApiApi} from "../api-client";
-import {getApiConfiguration} from "../api";
-import {onMount, afterUpdate, onDestroy, tick} from "svelte";
+import {ApiApi} from "../../api-client";
+import {getApiConfiguration} from "../../api";
+import {onMount, afterUpdate, createEventDispatcher} from "svelte";
 import {fade} from "svelte/transition";
 import { quintInOut } from "svelte/easing";
-import {doc_list} from "../stores.js";
+import {doc_list} from "../../stores.js";
+import DocForm from "../form/DocForm.svelte";
 
-// implement a document_list array store
 
 let elems = [];
+const dispatch = createEventDispatcher();
+function docsUpdated() {
+    dispatch('docsUpdated');
+}
+
+function handleUpdate(event){
+    docsUpdated();
+}
+
+
+
 
 const client = new ApiApi(getApiConfiguration(SERVER_URL_BASE));
+
+// TODO: change so it only updates when doc_list changes
+// possibly by changing so doc_list is a child of this component
+// and then updating when event dispatched with list changed
 
 afterUpdate(async () => {
     let documents = [];

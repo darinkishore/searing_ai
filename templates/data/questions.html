@@ -1,21 +1,23 @@
 {% extends 'web/app/app_base.html' %}
+{% load static %}
 
 
 
 {% block app %}
-<section class="app-card flex bg-gray-100">
-    <!-- Unordered List of questions-->
-    <ul>
-    <a class="btn btn-primary p-4" href="{% url 'data:home' %}">
-        Back</a>
-        {% for question in questions %}
-            <li class="py-4">
-                <div class="question bg-white rounded-lg shadow p-4">
-                    <h3 class="pg-subtitle"> {{question.question}} </h3>
-                    <p class="pg-text"> {{question.answer}} </p>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
-</section>
+
+<a class="btn btn-primary p-4" href="{% url 'data:home' %}">Back</a>
+<div class="py-4"> </div>
+<section id="flashcards" class="app-card flex bg-gray-100"></section>
+
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+    const DOC_ID = "{{ questions.0.document.id }}"
+</script>
+
+<script src="{% static 'js/flashcards-bundle.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/flashcards.css' %}">
+
 {% endblock %}

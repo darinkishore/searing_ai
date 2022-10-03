@@ -1,15 +1,21 @@
 <script>
-import {ApiApi} from "../api-client";
-import {getApiConfiguration} from "../api";
+import {ApiApi} from "../../api-client";
+import {getApiConfiguration} from "../../api";
 import axios from 'axios';
-import {doc_list} from "../stores.js";
+import {doc_list} from "../../stores.js";
+import {createEventDispatcher} from 'svelte';
 
 // this is a svelte component
 
 let client = new ApiApi(getApiConfiguration(SERVER_URL_BASE));
-let doc_file;
-let input;
-let doc_title;
+let doc_file, input, doc_title;
+const dispatch = createEventDispatcher();
+
+function docsUpdated() {
+    dispatch('docsUpdated');
+}
+docsUpdated();
+
 
 
 function isFormValid(file, title) {
@@ -49,22 +55,8 @@ function handleUpload() {
         data: values,
         headers: {'Content-Type': 'multipart/form-data'},
     })
-    // wait for request to complete then poll /api/documents for paginated list
-    // and push them to the store
 
-    // TODO: clean up document fetching
-
-    async () => {
-        let documents = [];
-        // docs is a temp var to hold results of call
-        let docs = await client.apiDocumentsList().catch((err) => {});
-        docs['results'].forEach(doc => {
-            documents.push(doc);
-        })
-        documents.sort((a, b) => b.createdAt - a.createdAt);
-        $doc_list.set(documents);
-    }
-
+    docsUpdated();
 
     // re-render form
     doc_title = null;
@@ -76,7 +68,7 @@ function handleUpload() {
 
 <main>
 
-<h1 class="pg-title mt-2 text-lg">Upload a Document!</h1>
+<h1 class="pg-title mt-2 text-lg" on:message >Upload a Document!</h1>
 
 <form class="max-w-lg" enctype="multipart/form-data" on:submit|preventDefault={handleUpload} id="docform">
     <div class="py-4">

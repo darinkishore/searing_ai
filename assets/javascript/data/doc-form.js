@@ -1,4 +1,4 @@
-import DocForm from './DocForm.svelte';
+import DocForm from './form/DocForm.svelte';
 import 'htmx.org';
 
 window.htmx = require('htmx.org');

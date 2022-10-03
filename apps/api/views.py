@@ -98,7 +98,8 @@ class SummaryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Show only the summary for the document that the user owns
-        return Summary.objects.filter(document__user=self.request.user).first()
+        return Summary.objects.filter(document__user=self.request.user,
+                                      document__id=self.kwargs['document_id']).first()
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -110,5 +111,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
-        # Show only the questions for the document that the user owns
-        return Question.objects.filter(document__user=self.request.user)
+        # Show only the questions for the current document
+        return Question.objects.filter(document__user=self.request.user,
+                                       document__id=self.kwargs['document_id'])

@@ -11,6 +11,7 @@
 <!--Alpine and HTMX-->
 <!--May make everything slower. Unsure if want to keep.-->
 <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+<script>const SERVER_URL_BASE = "{{ server_url }}";</script>
 
 {% if project_meta %}
   {% with project_meta|get_title:page_title as title %}
