@@ -59,6 +59,7 @@ django==4.1.1
     #   django-allauth
     #   django-annoying
     #   django-anymail
+    #   django-lockdown
     #   django-storages
     #   djangorestframework
     #   drf-spectacular
@@ -73,6 +74,8 @@ django-anymail[mailgun]==8.6
 django-cleanup==6.0.0
     # via -r requirements/requirements.in
 django-environ==0.9.0
+    # via -r requirements/requirements.in
+django-lockdown==4.0.0
     # via -r requirements/requirements.in
 django-storages==1.13.1
     # via -r requirements/requirements.in

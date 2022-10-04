@@ -2,20 +2,27 @@
 import {ApiApi} from "../../api-client";
 import {getApiConfiguration} from "../../api";
 import axios from 'axios';
+import {fade} from "svelte/transition";
+import { quintInOut } from "svelte/easing";
 import {doc_list} from "../../stores.js";
 import {createEventDispatcher} from 'svelte';
-
+import {CheckCircle, Icon, X} from "svelte-hero-icons";
 // this is a svelte component
 
 let client = new ApiApi(getApiConfiguration(SERVER_URL_BASE));
 let doc_file, input, doc_title;
+
+let uploading = false;
+function makeFalse() {uploading = false;}
+function makeTrue() {uploading = true;}
+
+
 const dispatch = createEventDispatcher();
 
 function docsUpdated() {
     dispatch('docsUpdated');
 }
 docsUpdated();
-
 
 
 function isFormValid(file, title) {
@@ -45,7 +52,7 @@ function handleUpload() {
     }
 
     let values = htmx.values(htmx.find('#docform'));
-    console.log(values);
+    makeTrue();
 
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -57,6 +64,7 @@ function handleUpload() {
     })
 
     docsUpdated();
+    setTimeout(makeFalse, 15000);
 
     // re-render form
     doc_title = null;
@@ -67,8 +75,30 @@ function handleUpload() {
 </script>
 
 <main>
+    {#if uploading===true}
+    <div transition:fade={{duration: 400, easing:quintInOut}}
+         class="grid rounded-md bg-green-50 p-1">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 pl-4">
+          <Icon src={CheckCircle} solid class=" items-center h-6 w-6 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" />
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-green-800">Nice! It's uploading.</p>
+        </div>
+        <div class="ml-auto pl-3">
+          <div class="-mx-1.5 -my-1.5">
+            <button type="button" on:click={makeFalse} class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+              <span class="sr-only">Dismiss</span>
+              <Icon src="{X}" solid class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h1 class="pg-title mt-2 text-lg" on:message >Upload a Document!</h1>
+    {:else if uploading===false}
+    <h1 class="pg-title mt-2 text-lg" on:message >Upload a Document!</h1>
+    {/if}
 
 <form class="max-w-lg" enctype="multipart/form-data" on:submit|preventDefault={handleUpload} id="docform">
     <div class="py-4">
@@ -77,7 +107,6 @@ function handleUpload() {
                name="title" maxlength="255" placeholder="Document Title" required="" id="id_title">
     </div>
 
-    <!-- On submit, this triggers the hx-post request. -->
     <button type="submit" class="pg-button pg-button-secondary">
         Upload</button>
 </form>

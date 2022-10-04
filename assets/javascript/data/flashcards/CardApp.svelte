@@ -10,8 +10,9 @@
 
 	const vocab = writable([
 		{
-			"question": "test",
-			"answer": "test"
+			"question": "Hold your horses! We're still processing.\n" +
+					"Refresh the page in a few seconds, and give it another go.",
+			"answer": "There's no need to rush. Go tell your mother you love her."
 		}
 	]);
 

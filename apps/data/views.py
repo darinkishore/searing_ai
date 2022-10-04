@@ -69,3 +69,4 @@ def questions_view(request, pk):
     document = get_object_or_404(Document, pk=pk)
     questions = list(Question.objects.filter(document=document))
     return render(request, 'data/questions.html', {'questions': questions})
+

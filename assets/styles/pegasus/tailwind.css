@@ -4,14 +4,14 @@
   /* typography helpers */
 
   .pg-title {
-    @apply text-3xl font-bold mb-2;
+    @apply font-sans text-3xl font-bold mb-2;
   }
   .pg-subtitle {
-    @apply text-xl mb-1;
+    @apply font-sans text-xl mb-1;
   }
 
   .pg-text-centered {
-    @apply text-center;
+    @apply font-sans text-center;
   }
 
   .pg-text-left {
@@ -27,31 +27,31 @@
   }
 
   .pg-text-primary {
-    @apply text-primary;
+    @apply font-sans text-primary;
   }
 
   .pg-text-success {
-    @apply text-success;
+    @apply font-sans text-success;
   }
 
   .pg-text-info {
-    @apply text-info;
+    @apply font-sans text-info;
   }
 
   .pg-text-danger {
-    @apply text-error;
+    @apply font-sans text-error;
   }
 
   .pg-text-muted {
-    @apply text-gray-700;
+    @apply font-sans text-gray-700;
   }
 
   .pg-hidden-mobile-inline {
-    @apply hidden md:inline-block;
+    @apply font-sans hidden md:inline-block;
   }
 
   .pg-content {
-    @apply prose max-w-none lg:prose-lg;
+    @apply font-sans prose max-w-none lg:prose-lg;
   }
 
 
@@ -65,23 +65,23 @@
   /*buttons*/
 
   .pg-button-primary {
-    @apply btn btn-primary;
+    @apply font-sans btn btn-primary;
   }
 
   .pg-button-secondary {
-    @apply btn btn-outline;
+    @apply font-sans btn btn-outline;
   }
 
   .pg-button-light {
-    @apply btn btn-ghost;
+    @apply font-sans btn btn-ghost;
   }
 
   .pg-button-danger {
-    @apply btn btn-outline text-red-500 border-red-500 hover:bg-red-500 hover:border-red-700;
+    @apply font-sans btn btn-outline text-red-500 border-red-500 hover:bg-red-500 hover:border-red-700;
   }
 
   .pg-inline-buttons {
-    @apply flex space-x-1;
+    @apply font-sans flex space-x-1;
   }
 
   .pg-justify-content-end {
@@ -92,19 +92,19 @@
 
   /* forms */
   .pg-input-group {
-    @apply mb-3;
+    @apply font-sans mb-3;
   }
 
   .pg-label {
-    @apply block font-bold;
+    @apply font-sans block font-bold;
   }
 
   .pg-control {
-    @apply input input-bordered w-full;
+    @apply font-sans input input-bordered w-full;
   }
 
   .pg-select select {
-    @apply select select-bordered w-full;
+    @apply font-sans select select-bordered w-full;
   }
 
   /* columns */

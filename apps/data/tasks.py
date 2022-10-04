@@ -7,7 +7,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
-@app.task
+@app.task(bind=True)
 def wait_for_text_extraction_task(document_id):
     """
     Wait for text extraction to finish.
