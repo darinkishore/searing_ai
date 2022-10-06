@@ -22,11 +22,11 @@ module.exports = {
       {
         light: {
           ...require("daisyui/src/colors/themes")["[data-theme=light]"],
-          primary: "blue",
-          secondary: "#f6d860",
-          accent: "#37cdbe",
-          neutral: "#3d4451",
-          "base-100": "#ffffff",
+          primary: "#2A324B",
+          secondary: "#F58F29",
+          accent: "#C78283",
+          neutral: "#7699D4",
+          "base-100": "#F5F5F5",
         },
       },
     ],
