@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # initialize environment variables
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-LOCKDOWN_PASSWORDS = env('LOCKDOWN_PASSWORDS', default='')
+LOCKDOWN_PASSWORDS = os.environ.get('LOCKDOWN_PASSWORDS')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -37,7 +37,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # sentry
 sentry_sdk.init(
-    dsn=env('SENTRY_DSN'),
+    dsn=os.environ.get('SENTRY_DSN'),
     integrations=[DjangoIntegration()],
 
     # Set traces_sample_rate to 1.0 to capture 100%
@@ -260,8 +260,8 @@ USE_L10N = True
 USE_SPACES = True
 
 if USE_SPACES:
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = 'moshistatic'
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {
@@ -354,8 +354,8 @@ SPECTACULAR_SETTINGS = {
 
 
 # Celery setup (using redis)
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
 
 # Pegasus config
 
