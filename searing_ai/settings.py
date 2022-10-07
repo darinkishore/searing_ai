@@ -14,8 +14,11 @@ import environ
 import os
 from pathlib import Path
 import lockdown
+import sentry_sdk
 
+from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +34,18 @@ LOCKDOWN_PASSWORDS = env('LOCKDOWN_PASSWORDS', default='')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+
+# sentry
+sentry_sdk.init(
+    dsn=env('SENTRY_DSN'),
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -66,7 +81,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'widget_tweaks',
     'annoying',
-
+    'guardian',
 ]
 
 PEGASUS_APPS = [
@@ -190,12 +205,14 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 # or "optional" to send confirmation emails but not require them
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+GUARDIAN_MONKEY_PATCH = False
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # Needed to log in by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 
@@ -232,9 +249,6 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -254,15 +268,9 @@ if USE_SPACES:
         'CacheControl': 'max-age=86400',
     }
 
-    # static settings
-    if DEBUG:
-        STATIC_ROOT = BASE_DIR / 'staticfiles'
-        STATIC_URL = '/static/'
-        STATIC_LOCATION = 'static'
-    else:
-        STATIC_LOCATION = ''
-        STATICFILES_STORAGE = 'apps.data.storage_backends.StaticStorage'
-        STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+    STATIC_LOCATION = ''
+    STATICFILES_STORAGE = 'apps.data.storage_backends.StaticStorage'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
 
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'

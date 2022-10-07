@@ -3,10 +3,10 @@
 <li class="menu-title">
   <span>{% translate "Application" %}</span>
 </li>
-<li class="text-gray-800 hover:bg-gray-100 hover:text-gray-300 group flex items-center px-2  text-base font-medium rounded-md">
+<li class="hover:bg-base-100 hover:text-base-100 group flex items-center px-2 text-base font-medium rounded-md">
 <a href="{% url 'web:home' %}" {% if active_tab == 'dashboard' %}class="active :focus" {% endif %}>
             <!-- Heroicon name: outline/inbox -->
-            <svg class="text-gray-800 group-hover:text-gray-300 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg class="group-hover:text-base-100 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
             </svg>
             {% translate "Documents" %}
@@ -16,22 +16,22 @@
   <span>{% translate "My Account" %}</span>
 </li>
 <ul class="menu-list">
-  <li class="text-gray-800 hover:bg-gray-100 hover:text-gray-300 group flex items-center px-2 text-base font-medium rounded-md">
+  <li class="hover:bg-base-100 hover:text-base-100 group flex items-center px-2 text-base font-medium rounded-md">
     <a href="{% url 'users:user_profile' %}" {% if active_tab == 'profile' %}class="active"{% endif %}>
             <!-- Heroicon name: outline/inbox -->
 
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-             class="text-gray-800 group-hover:text-gray-300 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6">
+             class="group-hover:text-base-100 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"></path>
         </svg>
             {% translate "User" %}
       </a>
   </li>
   {% if user.has_usable_password %}
-  <li class="text-gray-800 hover:bg-gray-100 hover:text-gray-300 group flex items-center px-2  text-base font-medium rounded-md">
+  <li class="hover:bg-base-100 hover:text-base-100 group flex items-center px-2 text-base font-medium rounded-md">
     <a href="{% url 'account_change_password' %}" {% if 'accounts/password/change' in request.path %}class="active"{% endif %}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-             class="text-gray-800 group-hover:text-gray-300 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6">
+             class="group-hover:text-base-100 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
         {% translate "Password" %}
@@ -44,7 +44,6 @@
              class="text-red-600 group-hover:text-gray-300 group-active:text-gray-100 mr-1 flex-shrink-0 h-6 w-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
         </svg>
-
         {% translate "Sign out" %}
     </a>
   </li>

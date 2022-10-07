@@ -21,3 +21,5 @@ requests
 openai
 django-annoying
 django-lockdown
+sentry-sdk
+django-guardian

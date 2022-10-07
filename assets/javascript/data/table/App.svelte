@@ -5,6 +5,9 @@ import {onMount, afterUpdate, createEventDispatcher} from "svelte";
 import {fade} from "svelte/transition";
 import { quintInOut } from "svelte/easing";
 import {doc_list} from "../../stores.js";
+import { formatDistanceToNow } from 'date-fns'
+
+
 import DocForm from "../form/DocForm.svelte";
 
 
@@ -13,7 +16,6 @@ const dispatch = createEventDispatcher();
 function docsUpdated() {
     dispatch('docsUpdated');
 }
-
 function handleUpdate(event){
     docsUpdated();
 }
@@ -62,44 +64,56 @@ function deleteDocument(id) {
                 <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                     <table class="min-w-full divide-y divide-gray-300">
                         <!-- Table header -->
-                        <thead class="bg-gray-50">
-                        <tr>
+                        <thead >
+                        <tr class="bg-base-300">
                             <th id = "doc-name" scope="col"
-                                class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-base-content sm:pl-6">
                                 <p class="group inline-flex">Name</p>
                             </th>
-                            <th id="ul-date" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                <p class="group inline-flex">Last Modified</p>
+                            <th id="ul-date" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-base-content">
+                                <p class="group inline-flex">Uploaded</p>
                             </th>
-                            <th id="summary" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                            <th id="summary" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-base-content">
                                 <p class="group inline-flex"></p>
                             </th>
-                            <th id="questions" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                            <th id="questions" scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-base-content">
                                 <p class="group inline-flex"></p>
                             </th>
-                            <th id = "download" scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                            <th id = "delete" scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                 <span class="sr-only"></span>
                             </th>
                         </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 bg-white">
+                        <tbody class="divide-y divide-gray-200 bg-base-100">
                         <!-- Table rows -->
+                        {#if $doc_list.length === 0}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-base-content">
+                                    <div class="flex items-center">
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-base-content">
+                                                No documents uploaded. Let's get started!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                        {/if}
                         {#each $doc_list as doc, index}
                             <tr bind:this={elems[index]} transition:fade="{{duration: 400, easing:quintInOut}}" >
                                 <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
                                     <a href="{doc.file}" class="text-indigo-600 font-semibold hover:link hover:text-indigo-900">{doc.title}</a>
                                 </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    {doc.createdAt.getMonth()}/{doc.createdAt.getDate()}/{doc.createdAt.getFullYear()}
+                                <td class="px-3 py-4 text-sm text-base-content/50 whitespace-nowrap">
+                                    {formatDistanceToNow(new Date(doc.createdAt))} ago
                                 </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                <td class="px-3 py-4 text-sm text-base-content whitespace-nowrap">
                                     <a href="doc{doc.id}/summary"
-                                    class="text-indigo-600 hover:text-indigo-900" >
+                                    class="text-indigo-600 hover:text-indigo-900 hover:link" >
                                         Summary</a>
                                 </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                <td class="px-3 py-4 text-sm text-base-content whitespace-nowrap">
                                     <a href="doc{doc.id}/questions"
-                                       class="text-indigo-600 hover:text-indigo-900">
+                                       class="text-indigo-600 hover:text-indigo-900 hover:link">
                                         Questions</a>
                                 </td>
                                 <td hx-sync="this:drop" class="px-3 py-4 text-sm whitespace-nowrap text-right">
