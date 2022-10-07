@@ -22,6 +22,8 @@ botocore==1.27.73
     # via
     #   boto3
     #   s3transfer
+brotli==1.0.9
+    # via whitenoise
 celery[redis]==5.2.7
     # via -r requirements/requirements.in
 celery-progress==0.1.2
@@ -208,5 +210,7 @@ vine==5.0.0
     #   kombu
 wcwidth==0.2.5
     # via prompt-toolkit
+whitenoise[brotli]==6.2.0
+    # via -r requirements/requirements.in
 wrapt==1.14.1
     # via deprecated

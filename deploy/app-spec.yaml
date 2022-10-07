@@ -16,21 +16,25 @@ services:
 - dockerfile_path: Dockerfile.web
   envs:
   - key: DATABASE_URL
-    scope: RUN_TIME
-    value: ${searing-ai-db.DATABASE_URL}
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:j4THHkStNZn76yflg3YKjeE0nnPs2N3X:w5hrv03tYrPnZgGsUZ6LugqYMy6yhEOkALidCkKu9KJRJRZ1hV520QHySzxk+17oa2sqwyNH8BkWVgtpvBZwZgyTEDdInMnrTlkT2d5a2j4b2UVdHlr/jDyQRmQqntXND5GfepyJ1qs=]
   - key: DJANGO_SETTINGS_MODULE
     scope: RUN_AND_BUILD_TIME
+    type: plain
     value: searing_ai.settings_do
   - key: SECRET_KEY
     scope: RUN_AND_BUILD_TIME
-    value: 'bSjIADcyCAMJaUyrepchzgAUXHplrKFvovCyYrXr'
+    type: SECRET
+    value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
   - key: REDIS_URL
-    scope: RUN_TIME
-    value: ${searing-ai-redis.DATABASE_URL}
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:3zW2vo0bZwo+gLRGdlwjRX83kpyjr/Hk:lS6UTzx8xzrlLhmGjPELtBKgXIA2A2OBojpDxbSBK0/lENGZKvhTTNHnJj7dYzrf3Ta79WvzrLnt3wDhAmb3/iZrthOnJ283BFeN59g2x8Y6d0HfLHfpw7e0Jliq7O/6gPTJg1Vdvw/cWMSx055/mA+GyLsAmFAVGxY+Lw==]
   github:
-    branch: main
+    branch: master
     deploy_on_push: true
-    repo: user/searing-ai
+    repo: darinkishore/searing_ai
   http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xxs
@@ -42,21 +46,24 @@ workers:
 - dockerfile_path: Dockerfile.web
   envs:
   - key: DATABASE_URL
-    scope: RUN_TIME
-    value: ${searing-ai-db.DATABASE_URL}
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:j4THHkStNZn76yflg3YKjeE0nnPs2N3X:w5hrv03tYrPnZgGsUZ6LugqYMy6yhEOkALidCkKu9KJRJRZ1hV520QHySzxk+17oa2sqwyNH8BkWVgtpvBZwZgyTEDdInMnrTlkT2d5a2j4b2UVdHlr/jDyQRmQqntXND5GfepyJ1qs=]
   - key: DJANGO_SETTINGS_MODULE
     scope: RUN_AND_BUILD_TIME
     value: searing_ai.settings_do
   - key: SECRET_KEY
     scope: RUN_AND_BUILD_TIME
-    value: 'bSjIADcyCAMJaUyrepchzgAUXHplrKFvovCyYrXr'
+    type: SECRET
+    value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
   - key: REDIS_URL
-    scope: RUN_TIME
-    value: ${searing-ai-redis.DATABASE_URL}
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:3zW2vo0bZwo+gLRGdlwjRX83kpyjr/Hk:lS6UTzx8xzrlLhmGjPELtBKgXIA2A2OBojpDxbSBK0/lENGZKvhTTNHnJj7dYzrf3Ta79WvzrLnt3wDhAmb3/iZrthOnJ283BFeN59g2x8Y6d0HfLHfpw7e0Jliq7O/6gPTJg1Vdvw/cWMSx055/mA+GyLsAmFAVGxY+Lw==]
   github:
-    branch: main
+    branch: master
     deploy_on_push: true
-    repo: user/searing-ai
+    repo: darinkishore/searing_ai
   instance_count: 1
   instance_size_slug: basic-xs
   name: searing-ai-celery

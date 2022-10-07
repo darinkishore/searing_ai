@@ -1,3 +1,4 @@
+import os
 import time
 
 from django.test import TestCase, Client
@@ -8,6 +9,9 @@ from django.urls import reverse
 from ..models import Document, Summary, Question
 from ...users.models import CustomUser
 
+
+# most of these tests are not working because of the saving to s3 bucket
+# TODO: fix this
 
 class TestDocument(TestCase):
     def setUp(self):
@@ -30,9 +34,9 @@ class TestDocument(TestCase):
     # see if the ocr is successfully generated
     def test_document_ocr(self):
         self.document.start_text_extraction()
-        while self.document.get_text_extraction() != 'DONE':
+        while self.document.get_text_extraction(self.document.job_id) != 'DONE':
             time.sleep(2)
-            if self.document.get_text_extraction() == 'FAILED':
+            if self.document.get_text_extraction(self.document.job_id) == 'FAILED':
                 assert False
         self.document.get_text_extraction()
         self.document.extract_text()
@@ -41,13 +45,13 @@ class TestDocument(TestCase):
     # see if there is a summary generated
     def test_document_summary(self):
         # depends on ocr being done
-        if self.document.get_text_extraction() == 'DONE':
+        if self.document.get_text_extraction(self.document.job_id) == 'DONE':
             self.document.create_summary()
             assert self.document.summary
             assert self.document.summary.get_summary
         else:
             self.document.start_text_extraction()
-            while self.document.get_text_extraction() != 'DONE':
+            while self.document.get_text_extraction(self.document.job_id) != 'DONE':
                 time.sleep(2)
         self.document.get_text_extraction()
         self.document.extract_text()
@@ -55,7 +59,20 @@ class TestDocument(TestCase):
 
     # see if there are questions generated
     def test_document_questions(self):
-        self.document.create_questions()
+        # depends on ocr being done
+        if self.document.get_text_extraction(self.document.job_id) == 'DONE':
+            # depends on summary being done
+            if self.document.summary:
+                self.document.create_questions()
+                assert self.document.questions
+            else:
+                self.document.create_summary()
+                self.document.create_questions()
+        else:
+            self.document.start_text_extraction()
+            while self.document.get_text_extraction(self.document.job_id) != 'DONE':
+                time.sleep(2)
+
         assert self.document.questions
 
     # see if a user can access their own documents and not another user's documents
@@ -70,7 +87,7 @@ class TestDocument(TestCase):
         response = api_client.get('/api/documents')
         # ensure user1 can access their own documents
         assert response.status_code == 200
-        assert response.data[0]['title'] == 'test_document'
+        assert response.data['count'] == 1
         # try to get user2's documents
         response = api_client.get('/api/documents/' + str(self.document2.id))
         # ensure user1 cannot access user2's documents
@@ -111,7 +128,7 @@ class TestDocument(TestCase):
     def test_document_deletion_cross_user(self):
         # ensure user2 cannot delete user1's document
         self.client.force_login(self.user2)
-        response = self.client.delete('/api/documents/' + str(self.document.id) +)
+        response = self.client.delete('/api/documents/' + str(self.document.id))
         assert response.status_code == 404
         self.client.logout()
 
@@ -119,7 +136,7 @@ class TestDocument(TestCase):
     def test_document_deletion(self):
         # ensure user1 can delete their own document
         self.client.force_login(self.user)
-        response = self.client.delete('/api/documents/' + str(self.document.id) +)
+        response = self.client.delete('/api/documents/' + str(self.document.id))
         assert response.status_code == 204
         self.client.logout()
         assert not self.document.summary
@@ -133,41 +150,40 @@ class TestDocument(TestCase):
         self.document2.delete()
         self.user2.delete()
 
-    class TestSummary(TestCase):
-        def setUp(self):
-            self.client = Client()
-            self.user = CustomUser.objects.create(username='test_user', password='test_password')
-            self.document = Document.objects.create(user=self.user, title='test_document', file='test_file.pdf')
-            self.document.save()
-            # create a new text file
-            self.text_file = open('test_text.txt', 'w', encoding='utf-8')
-            self.text_file.write('test_content')
-            self.text_file.close()
-            self.summary = Summary.objects.create(document=self.document, content=self.text_file)
-            self.summary.save()
+class TestSummary(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = CustomUser.objects.create(username='test_user', password='test_password')
+        self.document = Document.objects.create(user=self.user, title='test_document', file='test_file.pdf')
+        self.document.save()
+        # create a new text file
+        with open('test_text.txt', 'w', encoding='utf-8') as f:
+            f.write('test_content')
+        self.summary = Summary.objects.create(document=self.document, content='test_text.txt')
+        self.summary.save()
+        # delete the text file
+        os.remove('test_text.txt')
 
-        def test_summary_creation(self):
-            self.assertEqual(self.summary.document, self.document)
-            self.assertEqual(self.summary.content, self.text_file)
+    def test_summary_creation(self):
+        self.assertEqual(self.summary.document, self.document)
+        self.assertEqual(self.summary.content, self.text_file)
 
-        def test_summary_get_summary(self):
-            self.assertEqual(self.summary.get_summary(), 'test_content')
+    def test_summary_get_summary(self):
+        self.assertEqual(self.summary.get_summary(), 'test_content')
 
-    class TestQuestion(TestCase):
-        def setUp(self):
-            self.client = Client()
-            self.user = CustomUser.objects.create(username='test_user', password='test_password')
-            self.document = Document.objects.create(user=self.user, title='test_document', file='test_file.pdf')
-            self.document.save()
-            self.question = Question.objects.create(document=self.document, question='test_question',
-                                                    answer='test_answer')
-            self.question.save()
+class TestQuestion(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = CustomUser.objects.create(username='test_user', password='test_password')
+        self.document = Document.objects.create(user=self.user, title='test_document', file='test_file.pdf')
+        self.document.save()
+        self.question = Question.objects.create(document=self.document, question='test_question',
+                                                answer='test_answer')
+        self.question.save()
 
-        def test_question_creation(self):
-            self.assertEqual(self.question.document, self.document)
-            self.assertEqual(self.question.question, 'test_question')
-            self.assertEqual(self.question.answer, 'test_answer')
+    def test_question_creation(self):
+        self.assertEqual(self.question.document, self.document)
+        self.assertEqual(self.question.question, 'test_question')
+        self.assertEqual(self.question.answer, 'test_answer')
 
-# assert a user can only access their own documents
-# assert a user cannot access another user's documents
 # assert a user can delete a document and the document/summary/questions are deleted in cascade
