@@ -16,11 +16,9 @@ from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
 
-env = environ.Env()
-environ.Env.read_env()
-AWS_ACCESS_KEY_ID = env('TEXTRACT_CRED')
-AWS_SECRET_ACCESS_KEY = env('TEXTRACT_PASS')
-AWS_REGION = env('AWS_REGION')
+AWS_ACCESS_KEY_ID = os.environ.get('TEXTRACT_CRED')
+AWS_SECRET_ACCESS_KEY = os.environ.get('TEXTRACT_PASS')
+AWS_REGION = os.environ.get('AWS_REGION')
 
 
 class Document(BaseModel):
@@ -86,8 +84,8 @@ class Document(BaseModel):
                 }
             },
             NotificationChannel={
-                'SNSTopicArn': env('SNS_TOPIC_ARN'),
-                'RoleArn': env('SNS_ROLE_ARN')})
+                'SNSTopicArn': os.environ.get('SNS_TOPIC_ARN'),
+                'RoleArn': os.environ.get('SNS_ROLE_ARN')})
         self.job_id = job_id['JobId']
         self.save()
 
@@ -146,7 +144,7 @@ class Document(BaseModel):
         """
         create a summary of the document
         """
-        openai.api_key = env('OPENAI_KEY')
+        openai.api_key = os.environ.get('OPENAI_KEY')
         text_to_summarize = self.ocr_text.read().decode('utf-8')
 
         text_to_summarize = text_to_summarize.split('.')
@@ -196,7 +194,7 @@ class Document(BaseModel):
         """
         generate questions for the document
         """
-        openai.api_key = env('OPENAI_KEY')
+        openai.api_key = os.environ.get('OPENAI_KEY')
         text_to_generate_questions = self.summary.get_summary
 
         num_questions = len(text_to_generate_questions) / 100
