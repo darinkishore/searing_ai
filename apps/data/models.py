@@ -192,7 +192,7 @@ class Document(BaseModel):
         # delete the text file from the local machine
         os.remove(f'{self.title}_summary.txt')
 
-    def generate_questions(self):
+    def create_questions(self):
         """
         generate questions for the document
         """

@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # initialize environment variables
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-LOCKDOWN_PASSWORDS = env('LOCKDOWN_PASSWORDS', default='')
+# LOCKDOWN_PASSWORDS = env('LOCKDOWN_PASSWORDS', default='')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -95,7 +95,7 @@ PROJECT_APPS = [
     'apps.api.apps.APIConfig',
     'apps.web',
     'apps.data',
-    'lockdown'  # remove before beta
+#     'lockdown'  # remove before beta
 ]
 
 LAST_APP = ['django_cleanup.apps.CleanupConfig']
@@ -114,7 +114,7 @@ MIDDLEWARE = [
     'apps.web.locale_middleware.UserLocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'lockdown.middleware.LockdownMiddleware',  # remove before beta
+#     'lockdown.middleware.LockdownMiddleware',  # remove before beta
 ]
 
 ROOT_URLCONF = 'searing_ai.urls'

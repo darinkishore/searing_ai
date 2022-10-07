@@ -16,6 +16,8 @@ _dist/
 .env.dev
 .env.production
 .DS_Store
+.coverage
+htmlcov/
 
 # uncomment these lines after setting up the front-end build pipeline in dev and production
 static/
