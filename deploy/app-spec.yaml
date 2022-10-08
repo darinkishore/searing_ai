@@ -14,8 +14,6 @@ name: searing-ai
 region: nyc
 services:
 - dockerfile_path: Dockerfile.web
-  environment:
-    - AWS_PROFILE=default
   envs:
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
@@ -40,16 +38,12 @@ services:
   http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xxs
-  volumes:
-    - ~/.aws/:/root/.aws:ro
   name: searing-ai-web
   routes:
   - path: /
   run_command: gunicorn --bind 0.0.0.0:8080 --workers 1 --threads 8 --timeout 0 --worker-tmp-dir /dev/shm searing_ai.wsgi:application
 workers:
 - dockerfile_path: Dockerfile.web
-  environment:
-  - AWS_PROFILE=default
   envs:
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
@@ -70,8 +64,6 @@ workers:
     branch: master
     deploy_on_push: true
     repo: darinkishore/searing_ai
-  volumes:
-    - ~/.aws/:/root/.aws:ro
   instance_count: 1
   instance_size_slug: basic-xs
   name: searing-ai-celery
