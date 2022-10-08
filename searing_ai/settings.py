@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import lockdown
 import sentry_sdk
+import boto3
 
 from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy
@@ -257,6 +258,11 @@ USE_L10N = True
 USE_SPACES = True
 
 if USE_SPACES:
+
+    session = boto3.Session(
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_ACCESS_KEY_ID'))
+
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = 'moshistatic'
