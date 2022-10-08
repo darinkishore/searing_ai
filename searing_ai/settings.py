@@ -267,7 +267,8 @@ if USE_SPACES:
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
     STATIC_URL = '/static/'
-    STATIC_ROOT = BASE_DIR / 'static'
+    if not DEBUG:
+        STATIC_ROOT = ''
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     # public media settings
@@ -284,6 +285,7 @@ else:
     MEDIA_ROOT = BASE_DIR / 'media'
     MEDIA_URL = '/media/'
 
+STATICFILES_DIRS = [BASE_DIR / 'static/']
 
 
 # uncomment to use manifest storage to bust cache when file change
