@@ -14,6 +14,8 @@ name: searing-ai
 region: nyc
 services:
 - dockerfile_path: Dockerfile.web
+  environment:
+    - AWS_PROFILE=default
   envs:
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
@@ -38,6 +40,8 @@ services:
   http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xxs
+  volumes:
+    - ~/.aws/:/root/.aws:ro
   name: searing-ai-web
   routes:
   - path: /
