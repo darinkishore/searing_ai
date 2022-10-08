@@ -278,7 +278,6 @@ if USE_SPACES:
     PRIVATE_FILE_STORAGE = 'apps.data.storage_backends.PrivateMediaStorage'
 
 
-
 else:
     STATIC_URL = '/static/'
     STATIC_ROOT = BASE_DIR / 'static_root'
