@@ -201,7 +201,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
 # or "optional" to send confirmation emails but not require them
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 GUARDIAN_MONKEY_PATCH = False
 
@@ -265,15 +265,10 @@ if USE_SPACES:
 
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = 'moshistatic'
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
 
-    STATIC_LOCATION = ''
-    STATICFILES_STORAGE = 'apps.data.storage_backends.StaticStorage'
-    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+    STATIC_URL = '/static/'
+    STATIC_ROOT = BASE_DIR / 'static_root'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
@@ -281,6 +276,8 @@ if USE_SPACES:
     # private media settings
     PRIVATE_MEDIA_LOCATION = 'private'
     PRIVATE_FILE_STORAGE = 'apps.data.storage_backends.PrivateMediaStorage'
+
+
 
 else:
     STATIC_URL = '/static/'
@@ -309,11 +306,15 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Email setup
-
-# use in development
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
+    "MAILGUN_SENDER_DOMAIN": 'searing.ai'
+}
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 # use in production
 # see https://github.com/anymail/django-anymail for more details/examples
 # EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
@@ -374,8 +375,9 @@ PROJECT_METADATA = {
 
 USE_HTTPS_IN_ABSOLUTE_URLS = False  # set this to True in production to have URLs generated with https instead of http
 
-ADMINS = [('Darin', 'ghb8745@gmail.com')]
-
+SERVER_EMAIL = 'noreply@searing.ai'
+DEFAULT_FROM_EMAIL = 'darin@searing.ai'
+ADMINS = [('Darin Kishore', 'darin@searing.ai'),]
 # Add your google analytics ID to the environment or default value to connect to Google Analytics
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
 

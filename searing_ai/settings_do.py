@@ -29,3 +29,5 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True
 MIDDLEWARE += [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
