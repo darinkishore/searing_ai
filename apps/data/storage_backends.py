@@ -2,12 +2,13 @@ from abc import ABC
 
 import django.core.files.storage
 from django.conf import settings
-from storages.backends.s3boto3 import S3Boto3Storage
+from storages.backends.s3boto3 import S3Boto3Storage, S3StaticStorage
+
 
 
 # add bucket-names to these!
 
-class StaticStorage(S3Boto3Storage):
+class StaticStorage(S3StaticStorage):
     location = settings.STATIC_LOCATION
     default_acl = 'public-read'
 
