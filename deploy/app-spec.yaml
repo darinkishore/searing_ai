@@ -15,6 +15,17 @@ region: nyc
 services:
 - dockerfile_path: Dockerfile.web
   envs:
+  - key: aws_access_key_id
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
+  - key: aws_secret_access_key
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
+  - key: aws_reigon
+    scope: RUN_AND_BUILD_TIME
+    value: us-west-2
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
     type: SECRET
@@ -45,6 +56,17 @@ services:
 workers:
 - dockerfile_path: Dockerfile.web
   envs:
+  - key: aws_access_key_id
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
+  - key: aws_secret_access_key
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
+  - key: aws_reigon
+    scope: RUN_AND_BUILD_TIME
+    value: us-west-2
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
     type: SECRET
