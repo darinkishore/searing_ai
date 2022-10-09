@@ -137,6 +137,7 @@ class Document(BaseModel):
         # delete the text file from the local machine
         os.remove(f'{self.title}_text.txt')
 
+
     def create_summary(self):
         """
         create a summary of the document
