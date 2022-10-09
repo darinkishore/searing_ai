@@ -82,10 +82,7 @@ class Document(BaseModel):
                     'Bucket': 'moshimedia',
                     'Name': name
                 }
-            },
-            NotificationChannel={
-                'SNSTopicArn': os.environ.get('SNS_TOPIC_ARN'),
-                'RoleArn': os.environ.get('SNS_ROLE_ARN')})
+            })
         self.job_id = job_id['JobId']
         self.save()
 

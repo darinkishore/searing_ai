@@ -1,11 +1,24 @@
 import time
 from celery import shared_task, Celery
 from apps.data.models import Document, Summary, Question
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
 
 app = Celery('searing_ai')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+sentry_sdk.init(
+    dsn='https://1a8f8766036f40e2af0f57c926013e39@o4503939342532608.ingest.sentry.io/4503954325897216',
+    integrations=[
+        CeleryIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production,
+    traces_sample_rate=1.0,
+)
 
 @app.task(bind=True)
 def wait_for_text_extraction_task(document_id):
