@@ -20,7 +20,7 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
-@shared_task
+@app.task
 def wait_for_text_extraction_task(document_id):
     """
     Wait for text extraction to finish.
@@ -33,20 +33,20 @@ def wait_for_text_extraction_task(document_id):
     else:
         extract_text_task(document_id)
 
-@shared_task
+@app.task
 def start_text_extraction_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.start_text_extraction()
     wait_for_text_extraction_task(document_id)
 
-@shared_task
+@app.task
 def extract_text_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.extract_text()
     create_summary_task(document_id)
     create_questions_task(document_id)
 
-@shared_task
+@app.task
 def create_summary_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.create_summary()
