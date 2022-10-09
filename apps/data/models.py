@@ -133,8 +133,8 @@ class Document(BaseModel):
         doc_text = doc_text.encode()
         with open(f'{self.title}_text.txt', 'wb') as f:
             f.write(doc_text)
-        self.ocr_text = f'{self.title}_text.txt'
-        self.save()
+
+        self.ocr_text.save(f'{self.title}_text.txt', ContentFile(doc_text))
         # delete the text file from the local machine
         os.remove(f'{self.title}_text.txt')
 
