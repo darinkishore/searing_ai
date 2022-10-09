@@ -365,7 +365,7 @@ CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
 # replace any values below with specifics for your project
 PROJECT_METADATA = {
     'NAME': gettext_lazy('Searing.ai'),
-    'URL': 'http://localhost:8000',
+    'URL': 'https://searing.ai',
     'DESCRIPTION': gettext_lazy("Learn shit. Real fast."),
     'IMAGE': 'https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg',
     'KEYWORDS': 'AI, Education, Learning, University, Professor, St',
