@@ -134,7 +134,9 @@ class Document(BaseModel):
         with open(f'{self.title}_text.txt', 'wb') as f:
             f.write(doc_text)
 
+        # save the file to the ocr_text field
         self.ocr_text.save(f'{self.title}_text.txt', ContentFile(doc_text))
+
         # delete the text file from the local machine
         os.remove(f'{self.title}_text.txt')
 
