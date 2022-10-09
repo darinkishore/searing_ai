@@ -20,7 +20,7 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
-@app.task(bind=True)
+@app.task
 def wait_for_text_extraction_task(document_id):
     """
     Wait for text extraction to finish.
