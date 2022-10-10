@@ -9,7 +9,6 @@ WORKDIR /code
 COPY requirements requirements/
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN pip install awscli
 COPY . /code/
 
 # configure awscli
@@ -20,8 +19,9 @@ ARG AWS_DEFAULT_REGION
 
 # print env vars to check
 
-RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-RUN aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+RUN MKDIR ~/.aws
+RUN echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+RUN echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
 
 
 # note: if you don't want to run collectstatic on every deploy you can remove this line.
