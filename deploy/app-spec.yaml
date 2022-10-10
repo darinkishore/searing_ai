@@ -55,6 +55,9 @@ services:
   run_command: gunicorn --bind 0.0.0.0:8080 --workers 1 --threads 8 --timeout 0 --worker-tmp-dir /dev/shm searing_ai.wsgi:application
 workers:
 - dockerfile_path: Dockerfile.web
+  args:
+    aws_access_key_id: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
+    aws_secret_access_key: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
   envs:
   - key: aws_access_key_id
     scope: RUN_AND_BUILD_TIME
