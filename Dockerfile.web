@@ -9,19 +9,8 @@ WORKDIR /code
 COPY requirements requirements/
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN pip install awscli
 COPY . /code/
 
-# configure awscli
-# get env vars from docker-compose
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-ARG AWS_DEFAULT_REGION
-
-# print env vars to check
-
-RUN aws configure set aws_access_key_id '$AWS_ACCESS_KEY_ID'
-RUN aws configure set aws_secret_access_key '$AWS_SECRET_ACCESS_KEY'
 
 
 # note: if you don't want to run collectstatic on every deploy you can remove this line.

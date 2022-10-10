@@ -1,4 +1,7 @@
+import os
 import time
+
+import boto3
 from celery import shared_task, Celery
 from apps.data.models import Document, Summary, Question
 import sentry_sdk
@@ -25,6 +28,7 @@ def wait_for_text_extraction_task(document_id):
     """
     Wait for text extraction to finish.
     """
+
     document = Document.objects.get(id=document_id)
     response = document.get_text_extraction()
     if response != 'DONE':
