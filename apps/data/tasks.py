@@ -55,7 +55,7 @@ def create_summary_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.create_summary()
 
-@shared_task(bind=True)
+@app.task
 def create_questions_task(document_id):
     document = Document.objects.get(pk=document_id)
     document.create_questions()
