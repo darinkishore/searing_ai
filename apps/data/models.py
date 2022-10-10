@@ -176,8 +176,6 @@ class Document(BaseModel):
         self.summary.content = summary
         self.summary.save()
 
-
-
     def create_questions(self):
         """
         generate questions for the document
@@ -238,7 +236,7 @@ class Document(BaseModel):
 
 class Summary(BaseModel):
     document = AutoOneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
-                                 null=True, default=None, primary_key=True)
+                                 default=None, primary_key=True)
     content = models.TextField(null=True, blank=True, default=None)
 
     @property
@@ -251,7 +249,7 @@ class Summary(BaseModel):
 
 class Question(BaseModel):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
-                                 null=True, default=None, primary_key=True)
+                                 default=None, primary_key=True)
 
     # delimited string, split by question mark
     question = models.TextField(default=None)
