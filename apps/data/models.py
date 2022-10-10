@@ -249,7 +249,7 @@ class Summary(BaseModel):
 
 class Question(BaseModel):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
-                                 default=None, primary_key=True)
+                                 default=None)
 
     # delimited string, split by question mark
     question = models.TextField(default=None)
