@@ -19,11 +19,9 @@ ARG AWS_SECRET_ACCESS_KEY
 ARG AWS_DEFAULT_REGION
 
 # print env vars to check
-RUN echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-RUN echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
 
-RUN aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-RUN aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+RUN aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
 
 # note: if you don't want to run collectstatic on every deploy you can remove this line.
