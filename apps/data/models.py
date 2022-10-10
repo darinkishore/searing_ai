@@ -238,8 +238,8 @@ class Document(BaseModel):
 
 class Summary(BaseModel):
     document = AutoOneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
-                                 null=True, default=None)
-    content = models.TextField(null=True, blank=True, default=None)
+                                 null=True, default=None, primary_key=True)
+    content = models.TextField(null=True, blank=True, default=None, on_delete=models.CASCADE)
 
     @property
     def get_summary(self):
@@ -251,7 +251,7 @@ class Summary(BaseModel):
 
 class Question(BaseModel):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
-                                 null=True, default=None)
+                                 null=True, default=None, primary_key=True)
 
     # delimited string, split by question mark
     question = models.TextField(default=None)
