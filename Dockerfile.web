@@ -19,7 +19,7 @@ ARG AWS_DEFAULT_REGION
 
 # print env vars to check
 
-RUN MKDIR ~/.aws
+RUN mkdir ~/.aws
 RUN echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
 RUN echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
 
