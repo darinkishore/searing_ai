@@ -146,11 +146,11 @@ class Document(BaseModel):
         block_size = 0
         for sentence in text_to_summarize:  # string
             # count characters in sentence
-            if block_size + len(sentence) < 13000:  # should be approximately within token length
+            if block_size + len(sentence) < 12000:  # should be approximately within token length
                 block.append(sentence)
                 block_size += len(sentence)
             # if the block is too long, append it to the broken text list and reset the block
-            elif block_size + len(sentence) >= 13000:
+            elif block_size + len(sentence) >= 12000:
                 broken_text.append(block)
                 block = []
             # if the sentence is the last sentence in the document
