@@ -2,16 +2,17 @@
 {% load meta_tags %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <!--IE compatibility-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!--Mobile friendly-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--Alpine and HTMX-->
-<!--May make everything slower. Unsure if want to keep.-->
-<script src="https://unpkg.com/htmx.org@1.8.0"></script>
-<script>const SERVER_URL_BASE = "{{ server_url }}";</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Alpine and HTMX-->
+    <!--May make everything slower. Unsure if want to keep.-->
+    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+    <script>const SERVER_URL_BASE = "{{ server_url }}";</script>
 
 {% if project_meta %}
   {% with project_meta|get_title:page_title as title %}

@@ -1,29 +1,18 @@
-{% load static %}
+{% extends 'web/base.html' %}
 {% load widget_tweaks %}
 
-<link rel="stylesheet" href="{% static 'css/site-base.css' %}">
-<link rel="stylesheet" href="{% static 'css/site-tailwind.css' %}">
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>searing.ai</title>
-</head>
-<body>
-
-<div class="relative pt-10 pb-20 sm:py-24">
-      <div class="absolute -inset-x-0 -top-48 -bottom-14 overflow-hidden bg-indigo-50">
-        <div class="absolute top-0 left-0 -translate-y-[10%] -translate-x-[55%] -scale-x-100 sm:left-1/2 sm:-translate-y-[6%] sm:-translate-x-[98%] lg:-translate-x-[106%] xl:-translate-x-[122%]">
-          <!-- Image src="" alt="" layout="fixed" width={918} height={1495} priority unoptimized/ -->
+{% block body_wrapper %}
+    <div class=" pt-10 pb-20 sm:py-24 ">
+        <div class="absolute -inset-x-0 -top-48 -bottom-14 overflow-hidden bg-indigo-50">
+            <div class="absolute top-0 left-0 -translate-y-[10%] -translate-x-[55%] -scale-x-100 sm:left-1/2 sm:-translate-y-[6%] sm:-translate-x-[98%] lg:-translate-x-[106%] xl:-translate-x-[122%]">
+                <!-- Image src="" alt="" layout="fixed" width={918} height={1495} priority unoptimized/ -->
+            </div>
+            <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white"></div>
+            <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white"></div>
         </div>
-        <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white"></div>
-        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white"></div>
-      </div>
-      <div class="relative">
-        <div class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
-          <h1 class="font-display text-5xl font-bold tracking-tighter text-blue-600 sm:text-7xl">
+        <div class="relative">
+            <div class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
+                <h1 class="font-display text-5xl font-bold tracking-tighter text-blue-600 sm:text-7xl">
             How fast can you really learn?
           </h1>
           <div class="mt-6 space-y-6 font-display text-2xl tracking-tight text-blue-900">
@@ -41,10 +30,5 @@
           </div>
         </div>
       </div>
-
-
     </div>
-
-</body>
-</html>
-
+{% endblock %}

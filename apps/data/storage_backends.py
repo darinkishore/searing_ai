@@ -24,12 +24,4 @@ class PrivateMediaStorage(S3Boto3Storage, ABC):
     bucket_name = 'moshimedia'
     custom_domain = f'{bucket_name}.s3.amazonaws.com'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-        self.secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
     file_overwrite = False
-
-
-
