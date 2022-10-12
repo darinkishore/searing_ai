@@ -17,8 +17,10 @@
           {% render_field form.password %}
           <div>
             <input class="btn btn-primary btn-block" type="submit" value="{% translate "Sign In" %}">
+              {%  comment %}
             <p class="text-center text-gray-500 my-2">{% translate "or" %}</p>
             {% include 'account/components/social/login_with_google_button.html' %}
+                  {% endcomment %}
           </div>
         </form>
         <div class="text-sm mt-4">
