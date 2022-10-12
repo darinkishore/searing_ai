@@ -11,7 +11,6 @@ import environ
 import openai
 from annoying.fields import AutoOneToOneField
 
-
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
@@ -33,8 +32,7 @@ class Document(BaseModel):
     text = models.JSONField(default=dict, blank=True, null=True)
     job_id = models.CharField(max_length=255, default=None, null=True, blank=True)
 
-    ocr_text = models.FileField(storage=PrivateMediaStorage,
-                                upload_to="documents/", default=None, blank=True, null=True)
+    ocr_text = models.TextField(default=None, null=True, blank=True)
 
     def is_processed(self):
         return self.job_id
@@ -82,10 +80,7 @@ class Document(BaseModel):
                     'Bucket': 'moshimedia',
                     'Name': name
                 }
-            },
-            NotificationChannel={
-                'SNSTopicArn': os.environ.get('SNS_TOPIC_ARN'),
-                'RoleArn': os.environ.get('SNS_ROLE_ARN')})
+            })
         self.job_id = job_id['JobId']
         self.save()
 
@@ -132,20 +127,16 @@ class Document(BaseModel):
                     page_text += block['Text'] + ' ' + '\n'
             doc_text += page_text + '\n'
 
-        # create text file of content and save to s3
-        doc_text = doc_text.encode()
-        with open(f'{self.title}_text.txt', 'wb') as f:
-            f.write(doc_text)
-        self.ocr_text.save(f'{self.title}_text.txt', ContentFile(doc_text))
-        # delete the text file from the local machine
-        os.remove(f'{self.title}_text.txt')
+        # save the file to the ocr_text field
+        self.ocr_text = doc_text
+        self.save()
 
     def create_summary(self):
         """
         create a summary of the document
         """
         openai.api_key = os.environ.get('OPENAI_KEY')
-        text_to_summarize = self.ocr_text.read().decode('utf-8')
+        text_to_summarize = self.ocr_text
 
         text_to_summarize = text_to_summarize.split('.')
         # list of sentence strings
@@ -155,17 +146,16 @@ class Document(BaseModel):
         block_size = 0
         for sentence in text_to_summarize:  # string
             # count characters in sentence
-            if block_size + len(sentence) < 13000:  # should be approximately within token length
+            if block_size + len(sentence) < 12000:  # should be approximately within token length
                 block.append(sentence)
                 block_size += len(sentence)
             # if the block is too long, append it to the broken text list and reset the block
-            elif block_size + len(sentence) >= 13000:
+            elif block_size + len(sentence) >= 12000:
                 broken_text.append(block)
                 block = []
             # if the sentence is the last sentence in the document
             if sentence == text_to_summarize[-1]:
                 broken_text.append(block)
-
 
         summary = ''
         for block in broken_text:
@@ -180,15 +170,11 @@ class Document(BaseModel):
                 temperature=0.3,
                 presence_penalty=-0.75,
             )
+            # basically how you get the summary for each block
             summary += response['choices'][0]['text'] + '\n'
 
-        summary = summary.encode()
-        with open(f'{self.title}_summary.txt', 'wb') as f:
-            f.write(summary)
-
-        self.summary.content.save(f'{self.title}_summary.txt', ContentFile(summary))
-        # delete the text file from the local machine
-        os.remove(f'{self.title}_summary.txt')
+        self.summary.content = summary
+        self.summary.save()
 
     def create_questions(self):
         """
@@ -245,17 +231,17 @@ class Document(BaseModel):
                     document=self
                 )
 
+
 # summary, questions are one-one field with document
 
 class Summary(BaseModel):
     document = AutoOneToOneField("Document", on_delete=models.CASCADE, related_name="summary",
-                                    null=True, default=None)
-    content = models.FileField(storage=PrivateMediaStorage,
-                               upload_to="documents/", default=None, blank=True, null=True)
+                                 default=None, primary_key=True)
+    content = models.TextField(null=True, blank=True, default=None)
 
     @property
     def get_summary(self):
-        return self.content.read().decode('utf-8')
+        return self.content
 
     def __str__(self):
         return f"Summary of {self.document.title}"
@@ -263,7 +249,7 @@ class Summary(BaseModel):
 
 class Question(BaseModel):
     document = models.ForeignKey("Document", on_delete=models.CASCADE, related_name="questions",
-                                 null=True, default=None)
+                                 default=None)
 
     # delimited string, split by question mark
     question = models.TextField(default=None)

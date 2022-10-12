@@ -7,7 +7,7 @@ default_context:
   database: postgres
   deploy_platform: digital_ocean_app_platform
   description: Learn shit. Real fast.
-  domain_name: localhost:8000
+  domain_name: searing.ai
   email: ghb8745@gmail.com
   enable_google_login: y
   enable_twitter_login: n

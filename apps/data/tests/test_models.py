@@ -10,6 +10,10 @@ from ..models import Document, Summary, Question
 from ...users.models import CustomUser
 
 
+# where did things go wrong in production?
+# see if you can fetch the api and get docs
+# celery needs tests :(
+
 # most of these tests are not working because of the saving to s3 bucket
 # TODO: fix this
 
