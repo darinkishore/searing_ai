@@ -3,7 +3,7 @@
 
 {% block body_wrapper %}
     <div class=" pt-10 pb-20 sm:py-24 ">
-        <div class="absolute -inset-x-0 -top-48 -bottom-14 overflow-hidden bg-indigo-50">
+        <div class="absolute -inset-x-0 -top-48 -bottom-14 overflow-hidden bg-primary/10">
             <div class="absolute top-0 left-0 -translate-y-[10%] -translate-x-[55%] -scale-x-100 sm:left-1/2 sm:-translate-y-[6%] sm:-translate-x-[98%] lg:-translate-x-[106%] xl:-translate-x-[122%]">
                 <!-- Image src="" alt="" layout="fixed" width={918} height={1495} priority unoptimized/ -->
             </div>
@@ -12,17 +12,17 @@
         </div>
         <div class="relative">
             <div class="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
-                <h1 class="font-display text-5xl font-bold tracking-tighter text-blue-600 sm:text-7xl">
-            How fast can you really learn?
-          </h1>
-          <div class="mt-6 space-y-6 font-display text-2xl tracking-tight text-blue-900">
-            <p>
-                Learning shouldn't have to be a slog. At searing.ai, we work smarter, not harder.</p>
-            <p> Digest content quicker with our summary tools. Test your mastery with our
-                carefully curated, AI-generated flashcards.</p>
-            <p>  Based on groundbreaking research in learning and memorization.</p>
-              <form action="" method="post">
-                  {% csrf_token %}
+                <h1 class="font-display text-5xl font-bold tracking-tighter text-primary sm:text-7xl">
+                    How fast can you really learn?
+                </h1>
+                <div class="mt-6 space-y-6 font-display text-2xl tracking-tight text-primary/90">
+                    <p>
+                        Learning shouldn't have to be a slog. At searing.ai, we work smarter, not harder.</p>
+                    <p> Digest content quicker with our summary tools. Test your mastery with our
+                        carefully curated, AI-generated flashcards.</p>
+                    <p> Based on groundbreaking research in learning and memorization.</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
                   {% render_field form.password placeholder="Password"%}
                   <div class="py-2"></div>
                     <button type="submit" class="btn btn-primary ">LET ME IN!</button>
