@@ -16,29 +16,26 @@ from pathlib import Path
 import lockdown
 import sentry_sdk
 import boto3
-import environ
 
 from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# env variables
-env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, '.env'))
-
-LOCKDOWN_PASSWORDS = env('LOCKDOWN_PASSWORDS')
+LOCKDOWN_PASSWORDS = os.environ.get('LOCKDOWN_PASSWORDS')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # sentry
 sentry_sdk.init(
-    dsn=env('SENTRY_DSN'),
+    dsn=os.environ.get('SENTRY_DSN'),
     integrations=[DjangoIntegration()],
 
     # Set traces_sample_rate to 1.0 to capture 100%
@@ -51,7 +48,7 @@ sentry_sdk.init(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = []
 # timezone
 USE_TZ = True
 
@@ -153,7 +150,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'searing_ai'),
         'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', ''),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', '***'),
         'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'localhost'),
         'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
     }
@@ -263,14 +260,14 @@ USE_SPACES = True
 if USE_SPACES:
 
     session = boto3.Session(
-        aws_access_key_id=env('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=env('AWS_SECRET_ACCESS_KEY'))
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'))
 
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
     STATIC_URL = '/static/'
-    STATIC_ROOT = BASE_DIR / 'static_root'
+    STATIC_ROOT = BASE_DIR / 'static'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     # public media settings
@@ -283,11 +280,11 @@ if USE_SPACES:
 
 else:
     STATIC_URL = '/static/'
-    STATIC_ROOT = BASE_DIR / 'static_root'
+    STATIC_ROOT = BASE_DIR / 'static'
     MEDIA_ROOT = BASE_DIR / 'media'
     MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'assets']
 
 
 # uncomment to use manifest storage to bust cache when file change
@@ -295,6 +292,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # TODO: ensure that any user cannot view all usernames by connecting to media server
+
+
 
 
 # Default primary key field type
@@ -307,7 +306,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Email setup
 ANYMAIL = {
-    "MAILGUN_API_KEY": env('MAILGUN_API_KEY'),
+    "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
     "MAILGUN_SENDER_DOMAIN": 'searing.ai'
 }
 
@@ -356,9 +355,10 @@ SPECTACULAR_SETTINGS = {
     "SECURITY": [{"ApiKeyAuth": [], }],
 }
 
+
 # Celery setup (using redis)
-CELERY_BROKER_URL = env('REDIS_URL')
-CELERY_RESULT_BACKEND = env('REDIS_URL')
+CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
 
 # Pegasus config
 
@@ -378,7 +378,7 @@ SERVER_EMAIL = 'noreply@searing.ai'
 DEFAULT_FROM_EMAIL = 'darin@searing.ai'
 ADMINS = [('Darin Kishore', 'darin@searing.ai'),]
 # Add your google analytics ID to the environment or default value to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = ''
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
 
 
 # Stripe config
