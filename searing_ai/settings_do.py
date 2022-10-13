@@ -21,6 +21,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = [
     'searing.ai',
     'searing-ai-paadh.ondigitalocean.app'
+    'hammerhead-46jcc.ondigitalocean.app'
 ]
 
 USE_HTTPS_IN_ABSOLUTE_URLS = True
