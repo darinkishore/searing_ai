@@ -1,8 +1,13 @@
 {% if messages %}
-  {% for message in messages %}
-    <div class="notification flex w-full justify-between alert {% if message.tags %}alert-{{ message.level_tag }}{% endif %} shadow-md !rounded-none {{ message.extra_tags }} mb-1" >
-      <div>{{ message }}</div>
-      <button class="delete"><i class="fa fa-times"></i></button>
-    </div>
-  {% endfor %}
+    {% for message in messages %}
+        <div class="notification flex w-full justify-between alert {% if message.tags %}alert-{{ message.level_tag }}{% endif %} shadow-md !rounded-none {{ message.extra_tags }} mb-1">
+            <div class="text-success-content">{{ message }}</div>
+            <button class="delete">
+                <svg class="h-6 w-6 text-success-content" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+    {% endfor %}
 {% endif %}
