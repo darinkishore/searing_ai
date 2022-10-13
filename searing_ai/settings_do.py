@@ -20,7 +20,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # update with your site/domain
 ALLOWED_HOSTS = [
     'searing.ai',
-    'searing-ai-paadh.ondigitalocean.app'
+    'searing-ai-paadh.ondigitalocean.app',
     'hammerhead-46jcc.ondigitalocean.app'
 ]
 
