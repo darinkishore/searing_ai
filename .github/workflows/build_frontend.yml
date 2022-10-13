@@ -24,9 +24,20 @@ jobs:
         run: npm run build --verbose
       - name: Check types
         run: npm run type-check
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v9.1.0
+          name: production-files
+          path: ./static
+
+      - name: Download production-ready build files
+        uses: actions/download-artifact@v2
+        with:
+           name: production-files
+           path: ./static
+
+      - name: Deploy to the current branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+           github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+           publish_dir: ./build
