@@ -15,8 +15,7 @@ from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
 
-env = environ.Env()
-environ.Env.read_env()
+env = environ.FileAwareEnv()
 
 AWS_ACCESS_KEY_ID = env('TEXTRACT_CRED')
 AWS_SECRET_ACCESS_KEY = env('TEXTRACT_PASS')
