@@ -9,9 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!--Mobile friendly-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Alpine and HTMX-->
-    <!--May make everything slower. Unsure if want to keep.-->
-    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+    <script src={% static 'js/htmx-bundle.js' %}></script>
     <script>const SERVER_URL_BASE = "{{ server_url }}";</script>
 
     {% if project_meta %}
@@ -51,17 +49,17 @@
     {% endblock %}
 </head>
 
-<body class="font-sans" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body class="font-sans" hx-boost="true" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body_wrapper %}
-{% block top_nav %}
-  {% include 'web/components/top_nav.html' %}
-{% endblock %}
-{% block messages %}
-  {% include 'web/components/messages.html' %}
-{% endblock messages %}
-{% block body %}
-{% endblock body %}
-{% block footer %}
+    {% block top_nav %}
+        {% include 'web/components/top_nav.html' %}
+    {% endblock %}
+    {% block messages %}
+        {% include 'web/components/messages.html' %}
+    {% endblock messages %}
+    {% block body %}
+    {% endblock body %}
+    {% block footer %}
   {% include 'web/components/footer.html' %}
 {% endblock footer %}
 {% endblock body_wrapper %}

@@ -7,13 +7,15 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 import boto3
-
+from dotenv import load_dotenv
 import openai
 from annoying.fields import AutoOneToOneField
 
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
+
+load_dotenv()
 
 AWS_ACCESS_KEY_ID = os.environ.get('TEXTRACT_CRED')
 AWS_SECRET_ACCESS_KEY = os.environ.get('TEXTRACT_PASS')

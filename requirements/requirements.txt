@@ -150,6 +150,8 @@ python-dateutil==2.8.2
     # via
     #   botocore
     #   pandas
+python-dotenv==0.21.0
+    # via -r requirements/requirements.in
 python3-openid==3.2.0
     # via django-allauth
 pytz==2022.2.1

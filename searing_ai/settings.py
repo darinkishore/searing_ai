@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from dotenv import load_dotenv
+
 import os
 from pathlib import Path
 import lockdown
@@ -19,8 +21,7 @@ import boto3
 from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy
 
-
-
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,8 +48,7 @@ sentry_sdk.init(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost']
 # timezone
 USE_TZ = True
 
@@ -150,7 +150,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'searing_ai'),
         'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', '***'),
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', ''),
         'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'localhost'),
         'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
     }
@@ -267,7 +267,7 @@ if USE_SPACES:
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
     STATIC_URL = '/static/'
-    STATIC_ROOT = BASE_DIR / 'static'
+    STATIC_ROOT = BASE_DIR / 'static_root'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     # public media settings
@@ -280,11 +280,11 @@ if USE_SPACES:
 
 else:
     STATIC_URL = '/static/'
-    STATIC_ROOT = BASE_DIR / 'static'
+    STATIC_ROOT = BASE_DIR / 'static_root'
     MEDIA_ROOT = BASE_DIR / 'media'
     MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [BASE_DIR / 'assets']
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 # uncomment to use manifest storage to bust cache when file change
@@ -292,8 +292,6 @@ STATICFILES_DIRS = [BASE_DIR / 'assets']
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # TODO: ensure that any user cannot view all usernames by connecting to media server
-
-
 
 
 # Default primary key field type
@@ -355,7 +353,6 @@ SPECTACULAR_SETTINGS = {
     "SECURITY": [{"ApiKeyAuth": [], }],
 }
 
-
 # Celery setup (using redis)
 CELERY_BROKER_URL = os.environ.get('REDIS_URL')
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
@@ -378,7 +375,7 @@ SERVER_EMAIL = 'noreply@searing.ai'
 DEFAULT_FROM_EMAIL = 'darin@searing.ai'
 ADMINS = [('Darin Kishore', 'darin@searing.ai'),]
 # Add your google analytics ID to the environment or default value to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
+GOOGLE_ANALYTICS_ID = ''
 
 
 # Stripe config
