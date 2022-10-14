@@ -24,3 +24,4 @@ django-lockdown
 sentry-sdk
 django-guardian
 whitenoise[brotli]
+python-dotenv

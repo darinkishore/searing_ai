@@ -3,7 +3,7 @@ import ssl
 
 from .settings import *
 
-SECRET_KEY = env('SECRET_KEY', SECRET_KEY)
+SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY)
 REDIS_URL = f"{os.environ.get('REDIS_URL', 'redis://localhost:6379/0')}?ssl_cert_reqs=none"
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
