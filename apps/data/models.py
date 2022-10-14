@@ -77,7 +77,7 @@ class Document(BaseModel):
         job_id = textract.start_document_text_detection(
             DocumentLocation={
                 'S3Object': {
-                    'Bucket': 'moshimedia',
+                    'Bucket': os.environ.get('AWS_STORAGE_BUCKET'),
                     'Name': name
                 }
             })
