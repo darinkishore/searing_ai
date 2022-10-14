@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import environ
 import os
 from pathlib import Path
 import lockdown
@@ -49,6 +48,7 @@ sentry_sdk.init(
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 # timezone
 USE_TZ = True
 
