@@ -62,7 +62,7 @@
 
 </script>
 
-<main>
+<main hx-boost="true">
 
     {#if showModal}
         <div class="fixed z-10 inset-0 overflow-y-auto" id="delete-modal" aria-labelledby="modal-title" role="dialog"

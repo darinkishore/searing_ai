@@ -59,14 +59,14 @@
 	}
 </script>
 
-<main class="w-full">
+<main hx-boost="true" class="w-full">
 	<!-- FLASHCARD -->
-		<div class="flip-box w-full">
+	<div class="flip-box w-full">
 		<div class="flip-box-inner" class:flip-it={showCardBack}>
 			<Flashcard {clue}
-								 {answer}
-								 {showCardBack}
-								 />
+					   {answer}
+					   {showCardBack}
+			/>
 		</div>
 	</div>
 

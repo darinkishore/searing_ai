@@ -54,7 +54,7 @@
     "axios": "^0.27.2",
     "daisyui": "^2.27.0",
     "date-fns": "^2.29.3",
-    "htmx.org": "^1.8.0",
+    "htmx.org": "^1.8.2",
     "js-cookie": "^3.0.1",
     "prettier": "^2.7.1",
     "react": "^18.2.0",

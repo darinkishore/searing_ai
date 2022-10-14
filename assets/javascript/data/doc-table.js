@@ -14,6 +14,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+window.htmx = require('htmx.org');
 
 const app = new App({
 	target: document.getElementById("svelte-table")
