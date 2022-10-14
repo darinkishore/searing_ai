@@ -52,10 +52,9 @@
 <script>
     // if any /a tags are selected (with class name "active"),
     // then change the "text-gray-800" class of the child's svg to "text-gray-100"
-    let active = document.getElementsByClassName("active");
+    let current = document.getElementsByClassName("active");
     for (let i = 0; i < active.length; i++) {
-        active[i].children[0].classList.remove("text-gray-800");
-        active[i].children[0].classList.add("text-gray-100");
+        current[i].children[0].classList.remove("text-gray-800");
+        current[i].children[0].classList.add("text-gray-100");
     }
-
 </script>
