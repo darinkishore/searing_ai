@@ -1,12 +1,17 @@
 import os
 import time
 
+from django.core.files import File
 from django.test import TestCase, Client
-from rest_framework.test import APIClient
+from django.conf import settings
+
+from rest_framework.test import RequestsClient
+from requests.auth import HTTPBasicAuth
 from rest_framework import status
 from django.urls import reverse
 
 from ..models import Document, Summary, Question
+from ..storage_backends import PrivateMediaStorage
 from ...users.models import CustomUser
 
 
@@ -14,27 +19,90 @@ from ...users.models import CustomUser
 # see if you can fetch the api and get docs
 # celery needs tests :(
 
-# most of these tests are not working because of the saving to s3 bucket
-# TODO: fix this
-
 class TestDocument(TestCase):
     def setUp(self):
+        settings.DEFAULT_FILE_STORAGE = 'data.storage_backends.PrivateMediaStorage'
+        settings.STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        settings.WHITENOISE_MANIFEST_STRICT = False
+        # check to see if test_file.pdf is in private media storage
+
         self.client = Client()
         self.user = CustomUser.objects.create(username='test_user', password='test_password')
-        self.document = Document.objects.create(user=self.user, title='test_document', file='test_file.pdf')
+        # upload document to s3 bucket
+        # test_file fills document.file filefield
+        self.document = Document.objects.create(title='test_document', user=self.user)
+
+        with open('test_file.pdf', 'rb') as test_file:
+            self.document.file.save('test_file.pdf', File(test_file))
         self.document.save()
 
-        # second user and second document
-        self.user2 = CustomUser.objects.create(username='test_user2', password='test_password2')
-        self.document2 = Document.objects.create(user=self.user2, title='test_document2', file='test_file2.pdf')
+        self.user2 = CustomUser.objects.create(username='test_user_2', password='test_password_2')
+        self.document2 = Document.objects.create(title='test_document_2', user=self.user2)
+        with open('test_file_2.pdf', 'rb') as test_file:
+            self.document2.file.save('test_file_2.pdf', File(test_file))
         self.document2.save()
+
 
     # see if a document can be created
     def test_document_creation(self):
         self.assertEqual(self.document.title, 'test_document')
-        self.assertEqual(self.document.file, 'test_file.pdf')
+        self.assertEqual(self.document.file, 'documents/test_file.pdf')
         self.assertEqual(self.document.user, self.user)
 
+        self.assertEqual(self.document2.title, 'test_document_2')
+        self.assertEqual(self.document2.file, 'documents/test_file_2.pdf')
+        self.assertEqual(self.document2.user, self.user2)
+
+    def test_document_ocr(self):
+        self.document.start_text_extraction()
+        response = self.document.get_text_extraction()
+        while response != 'DONE':
+            time.sleep(2)
+            response = self.document.get_text_extraction()
+        self.document.extract_text()
+        assert self.document.text
+        self.doc_summary()
+        self.doc_questions()
+
+    def doc_summary(self):
+        # depends on ocr being done
+        self.document.create_summary()
+        assert self.document.summary
+        assert self.document.summary.get_summary
+
+    def doc_questions(self):
+        self.document.create_questions()
+        assert self.document.questions
+
+    def tearDown(self) -> None:
+        self.document.file.delete()
+        self.document2.file.delete()
+        # see if the file was deleted in s3 bucket
+        self.assertFalse(self.document.file)
+        self.assertFalse(self.document2.file)
+        self.user.delete()
+        self.user2.delete()
+        self.document.delete()
+        self.document2.delete()
+
+"""
+something that might help you get your integration tests (functional / end-to-end / whatever you want to call them) 
+going might be something like `factory_boy` (pretty much the defacto standard for most people) or another library 
+like `mixer` or `model_baker` (formerly `model_mommy`).
+
+Depending on your model structure, you can spin up many models (perhaps a whole apps worth) in like 1 line of code. 
+Tie that in with selenium for browser testing and you have very easy way to get testing your app from a users perspective.
+
+Then you can assert that you're using the right templates, that certain key elements exist, that things are certain sizes in various situations, 
+pretty much anything that might be worth testing, really. Click this, navigate there, submit that form, etc.
+Additionally, we've gone the route of bringing everything over to pytest because it even gives us the ability
+to allow for `--nomigrations`, which is supremely useful should you have an app with unmanaged models (which we do). 
+While it is possible to do that in Django, you have to come up with some wonky/hacky workarounds - whereas with pytest
+you just pass it that option.
+
+"""
+
+"""
     # see if the ocr is successfully generated
     def test_document_ocr(self):
         self.document.start_text_extraction()
@@ -191,3 +259,5 @@ class TestQuestion(TestCase):
         self.assertEqual(self.question.answer, 'test_answer')
 
 # assert a user can delete a document and the document/summary/questions are deleted in cascade
+
+"""

@@ -17,6 +17,7 @@ module.exports = {
     'doc-table': './assets/javascript/data/doc-table.js',
     'doc-form': './assets/javascript/data/doc-form.js',
     'flashcards': './assets/javascript/data/flashcards.js',
+    'htmx': './assets/javascript/htmx.min.js',
   },
   output: {
     path: path.resolve(__dirname, './static'),

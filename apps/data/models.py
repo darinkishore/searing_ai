@@ -7,13 +7,15 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 import boto3
-import environ
+from dotenv import load_dotenv
 import openai
 from annoying.fields import AutoOneToOneField
 
 from apps.utils.models import BaseModel
 from ..users.models import CustomUser
 from .storage_backends import PrivateMediaStorage
+
+load_dotenv()
 
 AWS_ACCESS_KEY_ID = os.environ.get('TEXTRACT_CRED')
 AWS_SECRET_ACCESS_KEY = os.environ.get('TEXTRACT_PASS')
@@ -77,7 +79,7 @@ class Document(BaseModel):
         job_id = textract.start_document_text_detection(
             DocumentLocation={
                 'S3Object': {
-                    'Bucket': 'moshimedia',
+                    'Bucket': os.environ.get('AWS_STORAGE_BUCKET'),
                     'Name': name
                 }
             })

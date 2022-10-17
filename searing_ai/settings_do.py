@@ -1,4 +1,3 @@
-import dj_database_url
 import ssl
 
 from .settings import *
@@ -12,7 +11,8 @@ BROKER_USE_SSL = {
 }
 
 DEBUG = False
-DATABASES['default'] = dj_database_url.config(ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(engine='django.db.backends.postgresql_psycopg2',
+# conn_max_age=600, ssl_require=True)
 
 # fix ssl mixed content issues
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -20,7 +20,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # update with your site/domain
 ALLOWED_HOSTS = [
     'searing.ai',
-    'searing-ai-paadh.ondigitalocean.app'
+    'searing-ai-paadh.ondigitalocean.app',
+    'hammerhead-46jcc.ondigitalocean.app'
 ]
 
 USE_HTTPS_IN_ABSOLUTE_URLS = True

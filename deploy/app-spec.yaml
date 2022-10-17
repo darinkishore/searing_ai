@@ -1,95 +1,185 @@
-
 databases:
-- engine: PG
-  name: searing-ai-db
-  num_nodes: 1
-  size: db-s-dev-database
-  version: "12"
-- cluster_name: searing-ai-redis
-  engine: REDIS
-  name: searing-ai-redis
-  production: true
-  version: "6"
+  - engine: PG
+    name: searing-ai-db
+    num_nodes: 1
+    size: db-s-dev-database
+    version: "12"
+  - cluster_name: searing-ai-redis
+    engine: REDIS
+    name: searing-ai-redis
+    production: true
+    version: "6"
+domains:
+  - domain: searing.ai
+    type: PRIMARY
+    zone: searing.ai
+envs:
+  - key: aws_access_key_id
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
+  - key: aws_secret_access_key
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
+  - key: AWS_REGION
+    scope: RUN_AND_BUILD_TIME
+    value: us-west-2
+  - key: MAILGUN_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:fnP6fIf2y4/4Thwu/ck0h1zM+dghsOH5:J4E/C6duT2pWsTkvy5FSZAfpNIZCwyZymp4dpwWAN4JdvSXfSLalK7DdnGVh46K8OaMgGHbSEYrEDj2huWNg2ImS]
+  - key: TEXTRACT_CRED
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:DhdpetqZYZwMq/hHfbdoPmUlHRsDg8QH:IzaRE/qEh2+2xzf1hDaMCwawKLlgxrRz0DaeXeb/lsyPfgvr]
+  - key: TEXTRACT_PASS
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:uOLFJMnl2tMuXOYf57kGS+ovZqyA/rw7:RuF5Aw2LP7olT6bPJAMSqDjm+9Q0u17wadDNDpjATbWQ9V/L6laxZ4CdwYuMoY4r2GUljOIEXpU=]
+  - key: DJANGO_DATABASE_NAME
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:X0QS3ssN1WSNEGXht0aDAG77KDk0Mprl:x3+1v36r9MEjMiuyKMbIojwOvCSihX5dTQ==]
+  - key: DJANGO_DATABASE_USER
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:UEN1bCBYMnoNBr/yTljzUPYBgGA1KUI5:4BnSgIUN5eRPutmIdLjvrwiuJaB6ANc=]
+  - key: DJANGO_DATABASE_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:VAXZ5WBA0nn/L4a5UVI6fcEKUqXSxvfI:yisjtn3ngCA0gXlmUg/t/s0TxFoAkOGGdikTRGy1YGDvxexsV792Yw==]
+  - key: DJANGO_DATABASE_HOST
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:s4FQC3ZqCeSLxDW+D1C0MerXYauj6tmJ:nTPcmQt4fzbSupANmo3takSQCDRmnDUnZSr/1kibkHhXhLj1gEg5zyS/JQzCrn2jNd4Z0d9gpNw2HGSst147zVweGyIsYfO6]
+  - key: DJANGO_DATABASE_PORT
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:ZQwDigCF4WujhKF5X3NylOc+XFkYrpLX:koF3beS5+vlVvXhH+J5WQsVkgFbE]
+  - key: OPENAI_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:uoGbKvBOC4Os4BtBRoupmSjYKgmiFL/e:uvWzmXDMxdSp9ICpTFnAQPMu50KPnD0l8vWDsJiDLAKkpfpdYdXH/FNVlSGnDns6diSWmhJvGLBHaTAsVb/dslEx/g==]
 name: searing-ai
 region: nyc
 services:
-- dockerfile_path: Dockerfile.web
-  envs:
-  - key: aws_access_key_id
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
-  - key: aws_secret_access_key
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
-  - key: aws_reigon
-    scope: RUN_AND_BUILD_TIME
-    value: us-west-2
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:j4THHkStNZn76yflg3YKjeE0nnPs2N3X:w5hrv03tYrPnZgGsUZ6LugqYMy6yhEOkALidCkKu9KJRJRZ1hV520QHySzxk+17oa2sqwyNH8BkWVgtpvBZwZgyTEDdInMnrTlkT2d5a2j4b2UVdHlr/jDyQRmQqntXND5GfepyJ1qs=]
-  - key: DJANGO_SETTINGS_MODULE
-    scope: RUN_AND_BUILD_TIME
-    type: plain
-    value: searing_ai.settings_do
-  - key: SECRET_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
-  - key: REDIS_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:3zW2vo0bZwo+gLRGdlwjRX83kpyjr/Hk:lS6UTzx8xzrlLhmGjPELtBKgXIA2A2OBojpDxbSBK0/lENGZKvhTTNHnJj7dYzrf3Ta79WvzrLnt3wDhAmb3/iZrthOnJ283BFeN59g2x8Y6d0HfLHfpw7e0Jliq7O/6gPTJg1Vdvw/cWMSx055/mA+GyLsAmFAVGxY+Lw==]
-  github:
-    branch: master
-    deploy_on_push: true
-    repo: darinkishore/searing_ai
-  http_port: 8080
-  instance_count: 1
-  instance_size_slug: basic-xxs
-  name: searing-ai-web
-  routes:
-  - path: /
-  run_command: gunicorn --bind 0.0.0.0:8080 --workers 1 --threads 8 --timeout 0 --worker-tmp-dir /dev/shm searing_ai.wsgi:application
+  - cors:
+      allow_credentials: true
+      allow_headers:
+        - content-type
+      allow_methods:
+        - GET
+        - HEAD
+        - POST
+        - DELETE
+        - PATCH
+        - PUT
+        - CONNECT
+        - OPTIONS
+        - TRACE
+      allow_origins:
+        - exact: https://searing.ai
+    dockerfile_path: Dockerfile.web
+    envs:
+      - key: DJANGO_SETTINGS_MODULE
+        scope: RUN_AND_BUILD_TIME
+        value: searing_ai.settings_do
+      - key: SECRET_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
+      - key: AWS_ACCESS_KEY_ID
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:cmPujagHS+4g+pUhGYW40FQH65aL2pE6:JZYwsuX3vUVmbQbpmOFmfkFuZ8/SJBHewAF3LvwM5dp+uF8F]
+      - key: AWS_SECRET_ACCESS_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:VxZMKRZW8pdn+AhwG8Zl3NkG+LSGFZjV:Fn8gFkkV4QxFscQtafHH+V1H+A4VBPuydqDoLgBCEWf1CM0wb0bZrwgQVvWLvW4xGDqUq45Aa4Y=]
+      - key: AWS_REGION
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:L5yA5uJ8V+T+ff3YVl+UXyi/Aq0UObAM:m8FkYu0XlTUfR+1wlVyGRNzJij5AenEEkQ==]
+      - key: TEXTRACT_CRED
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:BEJLmtNxE7bjOeU4TVZkQCKTF9v1W3nV:lBzw6AYmoZgO6l5H/KTKtFKmYK3kjJz5ZQIuVtDgJhs6DKO0]
+      - key: TEXTRACT_PASS
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:ulsw6PGYrPfg5Ye4gLcXoDwbftoLud1u:PYFpYYynjHSBeXFQlQLwaAZcxpdgK8VYJY6ITR/SDGlEKu1NKKpOGvy8wZQYRliFWa1jFT+qzR4=]
+      - key: SNS_TOPIC_ARN
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:iXilvwQ/2m6tgylzkeydB516NzrOKjWF:QTyvafQ9MR4Pki4yJagESOvPREQCM4bgZGtWI2hSGZteKPyaLVMQK0fHz/q8zVt/raCp0sK8rRJeQ5al8YTFt0/Sag==]
+      - key: SNS_ROLE_ARN
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:PETV5ECh5OxMyCvFMNDNw623aJKZIDMX:+mlZgPBSKJKm9a5ljPOBotg7UUX+g6R/J5+xmwJuaNw+pEAPXNJ46cy2F/SbdJ3By7V7]
+      - key: OPENAI_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:FtqJT0Qb02XD+QT02baqVJ+qLx+qrOsR:d5dTQwDxQwqjHi+TBddjR6AlBdSqEo79dJW4Ygcc5lUkWa0/acNQuuENI9fxKxydfXtrsH8xZS+dyb/MJfp6+W3pgg==]
+      - key: LOCKDOWN_PASSWORDS
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:f86r8AM9s565OtR2RZYNNA9xT6/fOvGs:pU2zEF0h5gye8wV0BSvHlsjISdGA2w==]
+      - key: SENTRY_DSN
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:dcIF1eq9RkEu1Yeozs4rgG7w8J9fQXK1:BIjwYD7GI3ih8qi6pf6BjkAM7UQghukjmq/HvChbK04U7ir3ruQZerp+f07bLzgpeSIvYv3FEFYssQOkFsa7qnT5Xp7SFxVjnH43teBEQWcqZV9kkw1SpGm+kPHq9Jg1vKU1ZePJ0eDMvITE]
+      - key: REDIS_URL
+        scope: RUN_AND_BUILD_TIME
+        value: rediss://default:AVNS_VmMY_tlyqjDh9NbwC-t@searing-ai-redis-do-user-12384932-0.b.db.ondigitalocean.com:25061
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:x9+gmQaQufw1DUOnNFQXvRligJ9mh0cv:2n5pDVDTMNwcgDQOj2A/vQG4D+t3zuFxflek55bPv0YO4CcroyRKtWLSGENE/7lxEqLtUnH3e4G+I4meeHeodrHG0FctE6wHhjzLKg1RuJ0x+XykwtHvoopttFEvrf/9cVSvnmXLM64f8iGoeQwz9c/SV1e/1mxOB8nXgElaabch3b98Mc23fEdidS6eXbS1dqJx4pwr0ZOD/PV7sN3lcyzdyhBCkSYnrO38SZ8lGDsu8GCKj6zmubuU+nZF]
+    github:
+      branch: master
+      deploy_on_push: true
+      repo: darinkishore/searing_ai
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    name: searing-ai-web
+    routes:
+      - path: /
+    run_command: gunicorn --bind 0.0.0.0:8080 --workers 1 --threads 8 --timeout 0 --worker-tmp-dir
+      /dev/shm searing_ai.wsgi:application
 workers:
 - dockerfile_path: Dockerfile.web
-  args:
-    aws_access_key_id: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
-    aws_secret_access_key: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
   envs:
-  - key: aws_access_key_id
+    - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:1LajAqlWAYdY1tIkNxoFmbCrHhTWr1ET:zLG833G84Y1JwjE0qxWAnNA7pnXnJuuNJ97AmtCfm+JCK/aK]
-  - key: aws_secret_access_key
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:kq4MnlEkrnmELdi4C4gitmS+qHWRgrH7:PgfSKx9TqQS3zSijzbRT+ySui5HaIbw79Emmw+2pTqVadjbQnb1F3/2kU9ihB6OWWxhsfi6+8n0=]
-  - key: aws_reigon
-    scope: RUN_AND_BUILD_TIME
-    value: us-west-2
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:j4THHkStNZn76yflg3YKjeE0nnPs2N3X:w5hrv03tYrPnZgGsUZ6LugqYMy6yhEOkALidCkKu9KJRJRZ1hV520QHySzxk+17oa2sqwyNH8BkWVgtpvBZwZgyTEDdInMnrTlkT2d5a2j4b2UVdHlr/jDyQRmQqntXND5GfepyJ1qs=]
-  - key: DJANGO_SETTINGS_MODULE
-    scope: RUN_AND_BUILD_TIME
-    value: searing_ai.settings_do
-  - key: SECRET_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
-  - key: REDIS_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:3zW2vo0bZwo+gLRGdlwjRX83kpyjr/Hk:lS6UTzx8xzrlLhmGjPELtBKgXIA2A2OBojpDxbSBK0/lENGZKvhTTNHnJj7dYzrf3Ta79WvzrLnt3wDhAmb3/iZrthOnJ283BFeN59g2x8Y6d0HfLHfpw7e0Jliq7O/6gPTJg1Vdvw/cWMSx055/mA+GyLsAmFAVGxY+Lw==]
+      type: SECRET
+      value: EV[1:j4THHkStNZn76yflg3YKjeE0nnPs2N3X:w5hrv03tYrPnZgGsUZ6LugqYMy6yhEOkALidCkKu9KJRJRZ1hV520QHySzxk+17oa2sqwyNH8BkWVgtpvBZwZgyTEDdInMnrTlkT2d5a2j4b2UVdHlr/jDyQRmQqntXND5GfepyJ1qs=]
+    - key: DJANGO_SETTINGS_MODULE
+      scope: RUN_AND_BUILD_TIME
+      value: searing_ai.settings_do
+    - key: SECRET_KEY
+      scope: RUN_AND_BUILD_TIME
+      type: SECRET
+      value: EV[1:KW3LspOKZffbeIrT3tIuJ4Zgcp2HutVw:nBF9UntvlwoT8h+gKbIrjPe6d2pcr0EePctRzAoFVtj1WbG9rxPqGfV+X1G6JF9z5leCNGBOIhG8ihToU0jF26Dp]
+    - key: REDIS_URL
+      scope: RUN_AND_BUILD_TIME
+      value: rediss://default:AVNS_VmMY_tlyqjDh9NbwC-t@searing-ai-redis-do-user-12384932-0.b.db.ondigitalocean.com:25061
+    - key: DATABASE_URL
+      scope: RUN_AND_BUILD_TIME
+      type: SECRET
+      value: EV[1:d8zWlZw3q91mGPCVySFw8H2HKSCwodo+:vU1Z5hlde7ssb7b23c+wbhboYWaSLgfc0sSN2FvxZ8ptO9w6nO5cN7wN+dkwubQPePQH1NkE79fTPrv9zqIP5GuGI3MYZDp/hz7VhvX6O8HEbZ/rsUO/W870qgFrjTFIPxxVNUyDEoRYXwz56eGKvX6s1XxXP/PMSyssd1ZTSTHrCE9Eb/FQO71jMNVPpzF8BC1waMM27L/pChsIplNP4Zudf5ZGYzMqre/gHJsduusNDjy7k7ZDC7kVLG29]
+    - key: CELERY_AWS_ACCESS_KEY_ID
+      scope: RUN_AND_BUILD_TIME
+      value: AKIAVIFRPRXMLTZZUR3B
+    - key: CELERY_AWS_SECRET_ACCESS_KEY
+      scope: RUN_AND_BUILD_TIME
+      value: +hQd+yskrIEFT6yvcbtV2253P5g2up/0pMELPrBw
   github:
     branch: master
     deploy_on_push: true
     repo: darinkishore/searing_ai
   instance_count: 1
-  instance_size_slug: basic-xs
+  instance_size_slug: basic-xxs
   name: searing-ai-celery
   run_command: celery -A searing_ai worker -l INFO --pool=gevent
