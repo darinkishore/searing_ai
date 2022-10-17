@@ -375,7 +375,7 @@ SERVER_EMAIL = 'noreply@searing.ai'
 DEFAULT_FROM_EMAIL = 'darin@searing.ai'
 ADMINS = [('Darin Kishore', 'darin@searing.ai'),]
 # Add your google analytics ID to the environment or default value to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = ''
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
 
 
 # Stripe config
