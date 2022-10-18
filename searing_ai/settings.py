@@ -335,7 +335,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Searing.ai',
-    'DESCRIPTION': 'Learn shit. Real fast.',
+    'DESCRIPTION': 'Learn things. Real fast.',
     'VERSION': '0.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
     "SWAGGER_UI_SETTINGS": {
