@@ -17,6 +17,7 @@ from pathlib import Path
 import lockdown
 import sentry_sdk
 import boto3
+import lockdown
 
 from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy
@@ -24,6 +25,8 @@ from django.utils.translation import gettext_lazy
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+LOCKDOWN_ENABLED = False
 
 LOCKDOWN_PASSWORDS = os.environ.get('LOCKDOWN_PASSWORDS')
 
