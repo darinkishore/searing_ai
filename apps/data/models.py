@@ -163,14 +163,14 @@ class Document(BaseModel):
         for block in broken_text:
             block_content = ' '.join(block).strip()
             response = openai.Completion.create(
-                model="text-davinci-002",
+                model="text-davinci-003",
                 prompt=f'Summarize the given text for a university student.'
                        f'Give them the most important information to '
                        f'learn the content of this text.\n'
                        f'Given text: \n {block_content} <|endoftext|>',
-                max_tokens=400,
-                temperature=0.3,
-                presence_penalty=-0.75,
+                max_tokens=600,
+                temperature=0.8,
+                presence_penalty=.15,
             )
             # basically how you get the summary for each block
             summary += response['choices'][0]['text'] + '\n'
@@ -190,7 +190,7 @@ class Document(BaseModel):
             num_questions = 3
 
         response = openai.Completion.create(
-            model="text-davinci-002",
+            model="text-davinci-003",
             prompt=f'Given this text, generate {num_questions} questions to test'
                    f'understanding of the text. The questions should'
                    f'be at the level of a university student, and test'
@@ -208,9 +208,9 @@ class Document(BaseModel):
                    f'A: A more just society.\n'
                    f'Given text: \n {text_to_generate_questions}'
                    f'<|endoftext|>',
-            max_tokens=400,
-            temperature=0.7,
-            presence_penalty=.15,
+            max_tokens=600,
+            temperature=0.8,
+            presence_penalty=.3,
         )
 
         questions = response['choices'][0]['text']
