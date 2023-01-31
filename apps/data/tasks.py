@@ -28,13 +28,12 @@ def wait_for_text_extraction_task(document_id):
     """
     Wait for text extraction to finish.
     """
-
+    
+    # TODO: fix the waiting 5 seconds for long enough causes recursion that's too big for memory bug
     document = Document.objects.get(id=document_id)
     response = document.get_text_extraction()
-    sleep_interval = 2
     if response != 'DONE':
-        time.sleep(sleep_interval)
-        sleep_interval *= sleep_interval
+        time.sleep(5)
         wait_for_text_extraction_task(document_id)
     else:
         extract_text_task(document_id)
